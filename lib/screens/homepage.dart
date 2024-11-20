@@ -76,8 +76,7 @@ class HomePage extends StatelessWidget {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
-          fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
     );
   }
 
@@ -141,7 +140,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Live Session Card
+// Live Session Card
   Widget _buildLiveSessionCard({required String title, required String time}) {
     return Card(
       elevation: 1,
@@ -154,7 +153,11 @@ class HomePage extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.red,
           ),
-          child: const Text("Watch"),
+          child: const Text(
+            "Watch",
+            style: TextStyle(
+                color: Colors.white), // Define a cor do texto como branco
+          ),
         ),
       ),
     );
