@@ -152,6 +152,8 @@ class HomePage extends StatelessWidget {
           onPressed: () {},
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.red,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           ),
           child: const Text(
             "Watch",
