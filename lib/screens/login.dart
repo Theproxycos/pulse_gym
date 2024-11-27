@@ -123,7 +123,7 @@ class Login extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Ação ao logar
+                    Navigator.of(context).pushReplacementNamed('/homepage');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.lightBlue,
