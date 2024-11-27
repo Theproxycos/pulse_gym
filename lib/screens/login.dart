@@ -11,12 +11,7 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            // Ação ao voltar
-          },
-        ),
+        automaticallyImplyLeading: false, // Remove a seta de voltar
         centerTitle: true,
         title: Text(
           'Log in',
@@ -26,14 +21,37 @@ class Login extends StatelessWidget {
         elevation: 0,
       ),
       body: Center(
-        // Centraliza verticalmente o conteúdo
         child: SingleChildScrollView(
-          // Permite rolagem em telas menores
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 20),
+              // Título personalizado
+              Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(4),
+                    color: Colors.orange,
+                    child: Text(
+                      'THE',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'Pulse Gym',
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30),
               // Campo Username
               TextField(
                 decoration: InputDecoration(
@@ -85,7 +103,12 @@ class Login extends StatelessWidget {
                   // Esquecer senha
                   TextButton(
                     onPressed: () {
-                      // Ação ao esquecer senha
+                      Navigator.pushNamed(context, "/newpass");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ForgotPasswordPage()),
+                      );
                     },
                     child: Text(
                       'Forgot password?',
@@ -101,7 +124,6 @@ class Login extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     // Ação ao logar
-                    Navigator.pushNamed(context, "/homepage");
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.lightBlue,
@@ -131,6 +153,66 @@ class Login extends StatelessWidget {
                       ],
                     ),
                   ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ForgotPasswordPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        centerTitle: true,
+        title: Text(
+          'Forgot password',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Enter your email',
+                  prefixIcon: Icon(Icons.email_outlined, color: Colors.orange),
+                  border: UnderlineInputBorder(),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orange),
+                  ),
+                ),
+              ),
+              SizedBox(height: 30),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Ação ao resetar senha
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.lightBlue,
+                  ),
+                  child: Text('Reset password'),
                 ),
               ),
             ],

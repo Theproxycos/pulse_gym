@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pulse_gym/screens/newpass.dart';
 import 'screens/login.dart';
 import 'screens/homepage.dart';
 
@@ -11,10 +12,11 @@ class PulseGym extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
+      initialRoute: '/newpass',
       routes: {
         '/homepage': (context) => HomePage(),
         '/login': (context) => Login(),
+        '/newpass': (context) => Newpass(),
       },
     );
   }
