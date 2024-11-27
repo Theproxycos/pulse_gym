@@ -41,27 +41,21 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           ),
         ],
         elevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
-          },
-        ),
+        automaticallyImplyLeading: false, // Impede a seta de voltar
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment:
+              MainAxisAlignment.center, // Centraliza o conteúdo verticalmente
+          crossAxisAlignment: CrossAxisAlignment
+              .center, // Centraliza o conteúdo horizontalmente
           children: [
-            const Center(
-              child: Text(
-                "Select a plan",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+            const Text(
+              "Select a plan",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 20),
@@ -85,7 +79,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               price: "40€",
               index: 2,
             ),
-            const Spacer(),
+            const SizedBox(
+                height: 20), // Espaço extra entre as caixas e o botão
             ElevatedButton(
               onPressed: selectedPlanIndex != null
                   ? () {
