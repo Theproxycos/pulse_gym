@@ -14,10 +14,6 @@ class Login extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false, // Remove a seta de voltar
         centerTitle: true,
-        title: Text(
-          'Log in',
-          style: TextStyle(color: Colors.black),
-        ),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -30,25 +26,10 @@ class Login extends StatelessWidget {
               // Título personalizado
               Column(
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(4),
-                    color: Colors.orange,
-                    child: Text(
-                      'THE',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    'Pulse Gym',
-                    style: TextStyle(
-                      color: Colors.orange,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32,
-                    ),
+                  // Imagem do título
+                  Image.asset(
+                    '../lib/assets/logo.png', // Substitua pelo caminho da sua imagem
+                    height: 80,
                   ),
                 ],
               ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../data/plan_data.dart'; // Ajuste o caminho conforme necessário
+// Ajuste o caminho conforme necessário
 
 import '../widgets/custom_bottom_nav_bar.dart';
 import 'plan_description.dart';
