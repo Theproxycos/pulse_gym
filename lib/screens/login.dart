@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pulse_gym/screens/register_page.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -23,12 +24,11 @@ class Login extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Título personalizado
               Column(
                 children: [
                   // Imagem do título
                   Image.asset(
-                    '../lib/assets/logo.png', // Substitua pelo caminho da sua imagem
+                    'lib/assets/logo.png', // Substitua pelo caminho da sua imagem
                     height: 80,
                   ),
                 ],
@@ -110,32 +110,36 @@ class Login extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.lightBlue,
                   ),
-                  child: Text('Log in'),
+                  child: Text(
+                    'Log in',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
               SizedBox(height: 20),
               // Botão para registro
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    // Navegar para tela de registro
-                  },
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Don't have an account? ",
-                      style: TextStyle(color: Colors.black),
-                      children: [
-                        TextSpan(
-                          text: "Register!",
-                          style: TextStyle(
-                            color: Colors.orange,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Don't have an account?",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => RegisterPage()),
+                      );
+                    },
+                    child: const Text(
+                      "Register!",
+                      style: TextStyle(
+                        color: Colors.orange,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
