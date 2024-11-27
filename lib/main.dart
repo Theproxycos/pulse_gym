@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/login.dart';
 import 'screens/homepage.dart';
+import 'screens/subscription_page.dart';
 
 void main() {
   runApp(PulseGym());
@@ -14,7 +15,6 @@ class PulseGym extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/homepage': (context) => HomePage(),
-        '/login': (context) => Login(),
       },
     );
   }
