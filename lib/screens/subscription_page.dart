@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pulse_gym/screens/homepage.dart';
+import '../data/plan_data.dart'; // Ajuste o caminho conforme necessário
 
 import '../widgets/custom_bottom_nav_bar.dart';
+import 'plan_description.dart';
 
 class SubscriptionPage extends StatefulWidget {
   const SubscriptionPage({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
@@ -64,6 +66,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               title: "Plan One",
               price: "20€",
               index: 0,
+              description: "Description for Plan One",
             ),
             const SizedBox(height: 10),
             _buildPlanCard(
@@ -71,6 +74,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               title: "Plan Two",
               price: "30€",
               index: 1,
+              description: "Description for Plan Two",
             ),
             const SizedBox(height: 10),
             _buildPlanCard(
@@ -78,6 +82,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               title: "Plan Three",
               price: "40€",
               index: 2,
+              description: "Description for Plan Three",
             ),
             const SizedBox(
                 height: 20), // Espaço extra entre as caixas e o botão
@@ -119,6 +124,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     required String title,
     required String price,
     required int index,
+    required String description, // Agora passa a descrição para cada plano
   }) {
     final isSelected = selectedPlanIndex == index;
 
@@ -131,7 +137,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         });
       },
       child: Card(
-        color: isSelected ? Colors.orange : Colors.white,
+        color: isSelected
+            ? Colors.orange[300]
+            : Colors.orange, // Cor mais clara quando selecionado
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -149,7 +157,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: isSelected ? Colors.white : Colors.black,
+                      color: isSelected
+                          ? Colors.black
+                          : Colors.white, // Cor do texto invertida
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -158,16 +168,32 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: isSelected ? Colors.white : Colors.black,
+                      color: isSelected
+                          ? Colors.black
+                          : Colors.white, // Cor do texto invertida
                     ),
                   ),
                 ],
               ),
               if (isSelected)
-                const Icon(
-                  Icons.info_outline,
-                  color: Colors
-                      .white, // Ícone de descrição (aparece quando selecionado)
+                IconButton(
+                  icon: const Icon(
+                    Icons.info_outline,
+                    color: Colors
+                        .black, // Ícone de descrição (aparece quando selecionado)
+                  ),
+                  onPressed: () {
+                    // Navegar para a página de descrição do plano
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlanDescriptionPage(
+                          planTitle: title,
+                          planDescription: description,
+                        ),
+                      ),
+                    );
+                  },
                 ),
             ],
           ),
