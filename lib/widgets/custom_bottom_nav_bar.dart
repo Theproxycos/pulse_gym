@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../screens/homepage.dart';
+import '../screens/subscription_page.dart';
+
 class CustomBottomNavBar extends StatelessWidget {
-  const CustomBottomNavBar({Key? key}) : super(key: key);
+  final int currentIndex;
+
+  const CustomBottomNavBar({
+    Key? key,
+    required this.currentIndex,
+    required String currentRoute,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,47 +30,60 @@ class CustomBottomNavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildNavItem(
+            context: context,
             icon: Icons.home,
             label: "Home",
-            isActive: true,
-            onTap: () {
-              // Ação ao clicar no botão Home
-            },
+            index: 0,
+            targetPage: const HomePage(),
           ),
+          // _buildNavItem(
+          //   context: context,
+          //   icon: Icons.fitness_center,
+          //   label: "Fitness",
+          //   index: 1,
+          //   targetPage: const FitnessPage(),
+          // ),
           _buildNavItem(
-            icon: Icons.fitness_center,
-            label: "Fitness",
-            onTap: () {
-              // Ação ao clicar no botão Fitness
-            },
-          ),
-          _buildNavItem(
-            icon: Icons.subscriptions,
+            context: context,
+            icon: Icons.euro,
             label: "Subscription",
-            onTap: () {
-              // Ação ao clicar no botão Subscription
-            },
+            index: 2,
+            targetPage: const SubscriptionPage(),
           ),
-          _buildNavItem(
-            icon: Icons.person,
-            label: "Profile",
-            onTap: () {
-              // Ação ao clicar no botão Profile
-            },
-          ),
+          // _buildNavItem(
+          //   context: context,
+          //   icon: Icons.person,
+          //   label: "Profile",
+          //   index: 3,
+          //   targetPage: const ProfilePage(),
+          // ),
         ],
       ),
     );
   }
 
   Widget _buildNavItem({
+    required BuildContext context,
     required IconData icon,
     required String label,
-    bool isActive = false,
-    required VoidCallback onTap,
+    required int index,
+    required Widget targetPage,
   }) {
+    final isActive = index == currentIndex;
+
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        if (index != currentIndex) {
+          Navigator.of(context).pushReplacement(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  targetPage,
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
+            ),
+          );
+        }
+      },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,

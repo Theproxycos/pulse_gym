@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../widgets/custom_bottom_nav_bar.dart';
 
 class HomePage extends StatelessWidget {
@@ -12,18 +11,15 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.white,
         title: Row(
           children: [
-            // Circulo para imagem
             CircleAvatar(
-              radius: 18, // Tamanho do círculo
-              backgroundImage:
-                  AssetImage('assets/user_image.png'), // Caminho da imagem
-              backgroundColor:
-                  Colors.grey[300], // Cor de fundo para caso não tenha imagem
+              radius: 18,
+              backgroundImage: AssetImage('assets/user_image.png'),
+              backgroundColor: Colors.grey[300],
             ),
-            const SizedBox(width: 10), // Espaço entre a imagem e o texto
+            const SizedBox(width: 10),
             const Text(
               "Hi User!",
-              style: TextStyle(color: Colors.black), // Define a cor do texto
+              style: TextStyle(color: Colors.black),
             ),
           ],
         ),
@@ -31,10 +27,10 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {},
-            color: Colors.black, // Cor do ícone
+            color: Colors.black,
           ),
         ],
-        elevation: 1, // Sombra da AppBar
+        elevation: 1,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -42,12 +38,10 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Seções da página
               _buildSectionTitle("Today's workout"),
               const SizedBox(height: 10),
               _buildWorkoutCard(),
               const SizedBox(height: 20),
-
               _buildSectionTitle("Live sessions"),
               const SizedBox(height: 10),
               _buildLiveSessionCard(
@@ -60,7 +54,6 @@ class HomePage extends StatelessWidget {
                 time: "Started at 11 AM 30/07/21",
               ),
               const SizedBox(height: 20),
-
               _buildSectionTitle("Trainer details"),
               const SizedBox(height: 10),
               _buildTrainerCard(),
@@ -68,11 +61,13 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavBar(), // Sidebar customizada
+      bottomNavigationBar: const CustomBottomNavBar(
+        currentIndex: 0,
+        currentRoute: 'homepage', // Define o índice da página atual
+      ),
     );
   }
 
-  // Section Title Widget
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
@@ -80,7 +75,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Today's Workout Card
   Widget _buildWorkoutCard() {
     return Card(
       elevation: 2,
@@ -140,7 +134,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-// Live Session Card
   Widget _buildLiveSessionCard({required String title, required String time}) {
     return Card(
       elevation: 1,
@@ -157,23 +150,20 @@ class HomePage extends StatelessWidget {
           ),
           child: const Text(
             "Watch",
-            style: TextStyle(
-                color: Colors.white), // Define a cor do texto como branco
+            style: TextStyle(color: Colors.white),
           ),
         ),
       ),
     );
   }
 
-  // Trainer Details Card
   Widget _buildTrainerCard() {
     return Card(
       color: Colors.blue[50],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: AssetImage(
-              'assets/trainer_image.png'), // Substitua pela sua imagem
+          backgroundImage: AssetImage('assets/trainer_image.png'),
         ),
         title: const Text("Trainer name"),
         subtitle: const Text("Contact details"),
