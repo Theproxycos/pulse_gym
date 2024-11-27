@@ -15,6 +15,8 @@ class PulseGym extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/homepage': (context) => HomePage(),
+        '/login': (context) => Login(),
+        '/subscription_page': (context) => SubscriptionPage(),
       },
     );
   }

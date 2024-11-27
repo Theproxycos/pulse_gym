@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:pulse_gym/screens/homepage.dart';
 
 import '../widgets/custom_bottom_nav_bar.dart';
 
-class SubscriptionPage extends StatelessWidget {
+class SubscriptionPage extends StatefulWidget {
   const SubscriptionPage({Key? key}) : super(key: key);
+
+  @override
+  _SubscriptionPageState createState() => _SubscriptionPageState();
+}
+
+class _SubscriptionPageState extends State<SubscriptionPage> {
+  int?
+      selectedPlanIndex; // Índice do plano selecionado (null se nenhum plano for selecionado)
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +41,14 @@ class SubscriptionPage extends StatelessWidget {
           ),
         ],
         elevation: 1,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -52,29 +69,34 @@ class SubscriptionPage extends StatelessWidget {
               context: context,
               title: "Plan One",
               price: "20€",
-              isSelected: false,
+              index: 0,
             ),
             const SizedBox(height: 10),
             _buildPlanCard(
               context: context,
               title: "Plan Two",
               price: "30€",
-              isSelected: false,
+              index: 1,
             ),
             const SizedBox(height: 10),
             _buildPlanCard(
               context: context,
               title: "Plan Three",
               price: "40€",
-              isSelected: true,
+              index: 2,
             ),
             const Spacer(),
             ElevatedButton(
-              onPressed: () {
-                // Ação para "Proceed to Pay"
-              },
+              onPressed: selectedPlanIndex != null
+                  ? () {
+                      // Ação para "Proceed to Pay"
+                    }
+                  : null, // Desabilita o botão caso nenhum plano esteja selecionado
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: selectedPlanIndex != null
+                    ? Colors.blue
+                    : Colors
+                        .grey, // Azul se houver plano selecionado, cinza se não
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -101,11 +123,17 @@ class SubscriptionPage extends StatelessWidget {
     required BuildContext context,
     required String title,
     required String price,
-    required bool isSelected,
+    required int index,
   }) {
+    final isSelected = selectedPlanIndex == index;
+
     return GestureDetector(
       onTap: () {
-        // Ação ao selecionar um plano
+        setState(() {
+          selectedPlanIndex = isSelected
+              ? null
+              : index; // Alterna entre selecionado e desmarcado
+        });
       },
       child: Card(
         color: isSelected ? Colors.orange : Colors.white,
@@ -140,10 +168,12 @@ class SubscriptionPage extends StatelessWidget {
                   ),
                 ],
               ),
-              Icon(
-                Icons.check_circle,
-                color: isSelected ? Colors.white : Colors.transparent,
-              ),
+              if (isSelected)
+                const Icon(
+                  Icons.info_outline,
+                  color: Colors
+                      .white, // Ícone de descrição (aparece quando selecionado)
+                ),
             ],
           ),
         ),

@@ -31,6 +31,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
         elevation: 1,
+        automaticallyImplyLeading: false, // Impede a seta de voltar
       ),
       body: SingleChildScrollView(
         child: Padding(
