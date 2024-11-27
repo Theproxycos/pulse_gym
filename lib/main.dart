@@ -13,7 +13,7 @@ class PulseGym extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/newpass',
+      initialRoute: '/login',
       routes: {
         '/homepage': (context) => HomePage(),
         '/login': (context) => Login(),
