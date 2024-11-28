@@ -28,11 +28,7 @@ class Login extends StatelessWidget {
                 children: [
                   // Imagem do título
                   Image.asset(
-<<<<<<< Updated upstream
                     'lib/assets/logo.png', // Substitua pelo caminho da sua imagem
-=======
-                    '../../assets/logo.png', // Substitua pelo caminho da sua imagem
->>>>>>> Stashed changes
                     height: 80,
                   ),
                 ],
