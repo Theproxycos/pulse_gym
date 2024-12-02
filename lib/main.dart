@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '/screens/profile.dart';
+import 'screens/settings_page.dart';
 import 'screens/newpass.dart';
 import 'screens/login.dart';
 import 'screens/homepage.dart';
@@ -24,7 +24,7 @@ class PulseGym extends StatelessWidget {
         '/subscription_page': (context) => const SubscriptionPage(),
         '/newpass': (context) => Newpass(),
         '/register_page': (context) => RegisterPage(),
-        '/profile': (context) => ProfilePage(),
+        '/settings_page': (context) => SettingsPage(),
       },
     );
   }

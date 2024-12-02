@@ -7,10 +7,10 @@ class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
 
   const CustomBottomNavBar({
-    Key? key,
+    super.key,
     required this.currentIndex,
     required String currentRoute,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,22 +39,29 @@ class CustomBottomNavBar extends StatelessWidget {
           // _buildNavItem(
           //   context: context,
           //   icon: Icons.fitness_center,
-          //   label: "Fitness",
+          //   label: "Activity",
           //   index: 1,
-          //   targetPage: const FitnessPage(),
+          //   targetPage: const ActivityPage(),
           // ),
-          _buildNavItem(
-            context: context,
-            icon: Icons.euro,
-            label: "Subscription",
-            index: 2,
-            targetPage: const SubscriptionPage(),
-          ),
+          // _buildNavItem(
+          //   context: context,
+          //   icon: Icons.euro,
+          //   label: "Explore",
+          //   index: 2,
+          //   targetPage: const ExplorePage(),
+          // ),
+          // _buildNavItem(
+          //   context: context,
+          //   icon: Icons.euro,
+          //   label: "Exercizes",
+          //   index: 3,
+          //   targetPage: const ExercizesPage(),
+          // ),
           // _buildNavItem(
           //   context: context,
           //   icon: Icons.person,
           //   label: "Profile",
-          //   index: 3,
+          //   index: 4,
           //   targetPage: const ProfilePage(),
           // ),
         ],

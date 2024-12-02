@@ -8,6 +8,8 @@ void main() {
 }
 
 class Login extends StatelessWidget {
+  const Login({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,9 +35,9 @@ class Login extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               // Campo Username
-              TextField(
+              const TextField(
                 decoration: InputDecoration(
                   labelText: 'Username',
                   prefixIcon: Icon(Icons.person_outline, color: Colors.orange),
@@ -48,9 +50,9 @@ class Login extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               // Campo Password
-              TextField(
+              const TextField(
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -64,7 +66,7 @@ class Login extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -74,12 +76,13 @@ class Login extends StatelessWidget {
                       Checkbox(
                         value: false,
                         onChanged: (value) {},
-                        side: BorderSide(color: Colors.orange, width: 1.5),
+                        side:
+                            const BorderSide(color: Colors.orange, width: 1.5),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
-                      Text('Remember me'),
+                      const Text('Remember me'),
                     ],
                   ),
                   // Esquecer senha
@@ -92,14 +95,14 @@ class Login extends StatelessWidget {
                             builder: (context) => ForgotPasswordPage()),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Forgot password?',
                       style: TextStyle(color: Colors.orange),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               // Botão de login
               SizedBox(
                 width: double.infinity,
@@ -110,18 +113,18 @@ class Login extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.lightBlue,
                   ),
-                  child: Text(
+                  child: const Text(
                     'Log in',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Botão para registro
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
+                  const Text(
                     "Don't have an account?",
                     style: TextStyle(color: Colors.black),
                   ),
@@ -150,18 +153,20 @@ class Login extends StatelessWidget {
 }
 
 class ForgotPasswordPage extends StatelessWidget {
+  const ForgotPasswordPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Forgot password',
           style: TextStyle(color: Colors.black),
         ),
@@ -175,7 +180,7 @@ class ForgotPasswordPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextField(
+              const TextField(
                 decoration: InputDecoration(
                   labelText: 'Enter your email',
                   prefixIcon: Icon(Icons.email_outlined, color: Colors.orange),
@@ -188,7 +193,7 @@ class ForgotPasswordPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -198,7 +203,7 @@ class ForgotPasswordPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.lightBlue,
                   ),
-                  child: Text('Reset password'),
+                  child: const Text('Reset password'),
                 ),
               ),
             ],

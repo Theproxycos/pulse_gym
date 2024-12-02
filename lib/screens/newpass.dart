@@ -7,19 +7,21 @@ void main() {
 }
 
 class Newpass extends StatelessWidget {
+  const Newpass({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context); // Volta para a tela anterior
           },
         ),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Forgot password',
           style: TextStyle(color: Colors.black),
         ),
@@ -35,7 +37,7 @@ class Newpass extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Campo de email
-              TextField(
+              const TextField(
                 decoration: InputDecoration(
                   labelText: 'Enter your email',
                   prefixIcon: Icon(Icons.email_outlined,
@@ -49,7 +51,7 @@ class Newpass extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               // Botão de reset password
               SizedBox(
                 width: double.infinity,
@@ -62,7 +64,7 @@ class Newpass extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.lightBlue,
                   ),
-                  child: Text('Reset password'),
+                  child: const Text('Reset password'),
                 ),
               ),
             ],

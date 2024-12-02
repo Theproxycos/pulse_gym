@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
+import 'settings_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -24,40 +25,30 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime today = DateTime.now(); // Data de hoje
-    DateTime prevMonth = DateTime(
-      today.year,
-      today.month == 1
-          ? 12
-          : today.month -
-              1, // Se for janeiro, vai para dezembro do ano anterior
-      today.day,
-    ); // Um mês antes
-    DateTime nextMonth = DateTime(
-      today.year,
-      today.month == 12
-          ? 1
-          : today.month + 1, // Se for dezembro, vai para janeiro do próximo ano
-      today.day,
-    ); // Um mês depois
-
-    if (today.month == 12) {
-      nextMonth =
-          DateTime(today.year + 1, 1, today.day); // Janeiro do próximo ano
-    }
+    // Calcula o mês anterior e seguinte
+    DateTime prevMonth = DateTime(today.year, today.month - 1, 1);
+    DateTime nextMonth = DateTime(today.year, today.month + 1, 1);
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
-          mainAxisSize:
-              MainAxisSize.min, // Evitar que o título ocupe muito espaço
+          mainAxisSize: MainAxisSize.min,
           children: [
-            CircleAvatar(
-              radius: 18,
-              backgroundImage: AssetImage('assets/user_image.png'),
-              backgroundColor: Colors.grey[300],
+            GestureDetector(
+              onTap: () {
+                // Navega para a página de perfil ao clicar na imagem
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
+              child: CircleAvatar(
+                radius: 18,
+                backgroundImage: AssetImage('assets/user_image.png'),
+                backgroundColor: Colors.grey[300],
+              ),
             ),
             const SizedBox(width: 10),
             const Text(
@@ -74,18 +65,17 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         elevation: 1,
-        automaticallyImplyLeading: false, // Impede a seta de voltar
+        automaticallyImplyLeading: false,
         bottom: PreferredSize(
-          preferredSize:
-              const Size.fromHeight(116), // Altura reduzida do calendário
+          preferredSize: const Size.fromHeight(116),
           child: Padding(
             padding:
                 const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
             child: EasyDateTimeLine(
-              initialDate: DateTime.now(), // Data inicial necessária
+              initialDate: today, // Usando a data atual diretamente
               onDateChange: (selectedDate) {
                 setState(() {
-                  _selectedDate = selectedDate; // Atualiza a data selecionada
+                  _selectedDate = selectedDate;
                 });
               },
               headerProps: const EasyHeaderProps(
@@ -161,36 +151,55 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildWorkoutCard() {
-    return Card(
-      elevation: 2,
-      color: Color(0xff3371FF),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildWorkoutItem(
-              icon: Icons.directions_run,
-              title: "Ganho de Massa Muscular",
-              subtitle: "Hipertrofia • Balanceado",
-            ),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text(
-                  "Progresso 0%",
-                  style: TextStyle(fontSize: 12, color: Colors.white),
-                ),
-                LinearProgressIndicator(
-                  value: 0.0,
-                  backgroundColor: Colors.white,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
-                ),
-              ],
-            ),
-          ],
+    return SizedBox(
+      width: double.infinity,
+      height: 150,
+      child: Card(
+        elevation: 2,
+        color: const Color(0xff3371FF),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildWorkoutItem(
+                icon: Icons.directions_run,
+                title: "Ganho de Massa Muscular",
+                subtitle: "Hipertrofia • Balanceado",
+              ),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start, // Alinha o texto à esquerda
+                    children: [
+                      Text(
+                        "Progresso 0%",
+                        style: TextStyle(fontSize: 12, color: Colors.white),
+                      ),
+                      SizedBox(
+                        height:
+                            8, // Espaço entre o texto e o LinearProgressIndicator
+                      ),
+                      SizedBox(
+                        width:
+                            120, // Define a largura fixa para o LinearProgressIndicator
+                        child: LinearProgressIndicator(
+                          value: 0.0,
+                          backgroundColor: Colors.white,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.orange),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -223,7 +232,7 @@ class _HomePageState extends State<HomePage> {
   ];
 
   Widget _buildMyWorkoutCards() {
-    return Container(
+    return SizedBox(
       height: 150,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -246,7 +255,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.only(right: 16.0),
       child: Card(
         elevation: 2,
-        color: Color(0xff3371FF),
+        color: const Color(0xff3371FF),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -268,14 +277,14 @@ class _HomePageState extends State<HomePage> {
     return Card(
       color: Colors.blue[50],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: ListTile(
+      child: const ListTile(
         leading: CircleAvatar(
           backgroundImage: AssetImage('assets/trainer_image.png'),
         ),
-        title: const Text("Trainer name"),
+        title: Text("Trainer name"),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text("Contact: trainer@example.com"),
             Text("Specialization: Personal Trainer"),
           ],

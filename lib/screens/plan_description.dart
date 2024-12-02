@@ -5,10 +5,10 @@ class PlanDescriptionPage extends StatelessWidget {
   final String planDescription;
 
   const PlanDescriptionPage({
-    Key? key,
+    super.key,
     required this.planTitle,
     required this.planDescription,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class PlanDescriptionPage extends StatelessWidget {
           children: [
             Text(
               planDescription,
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
             ),
           ],
         ),

@@ -5,7 +5,7 @@ import '../widgets/custom_bottom_nav_bar.dart';
 import 'plan_description.dart';
 
 class SubscriptionPage extends StatefulWidget {
-  const SubscriptionPage({Key? key}) : super(key: key);
+  const SubscriptionPage({super.key});
 
   @override
   _SubscriptionPageState createState() => _SubscriptionPageState();
@@ -20,31 +20,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 18,
-              backgroundImage: AssetImage('assets/user_image.png'),
-              backgroundColor: Colors.grey[300],
-            ),
-            const SizedBox(width: 10),
-            const Text(
-              "Hi User!",
-              style: TextStyle(color: Colors.black),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {},
-            color: Colors.black,
-          ),
-        ],
-        elevation: 1,
-        automaticallyImplyLeading: false, // Impede a seta de voltar
-      ),
+          backgroundColor: Colors.white, title: Text("Subscription Plan")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -111,10 +87,6 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: const CustomBottomNavBar(
-        currentIndex: 2,
-        currentRoute: '/subscription_page',
       ),
     );
   }
