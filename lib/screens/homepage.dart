@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:calendar_timeline/calendar_timeline.dart';
+import 'package:easy_date_timeline/easy_date_timeline.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    DateTime today = DateTime.now(); // Data atual
-    DateTime nextMonth =
-        DateTime(today.year, today.month + 1, today.day); // Um mês depois
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
-          mainAxisSize:
-              MainAxisSize.min, // Evitar que o título ocupe muito espaço
+          mainAxisSize: MainAxisSize.min,
           children: [
             CircleAvatar(
               radius: 18,
@@ -39,24 +44,39 @@ class HomePage extends StatelessWidget {
           ),
         ],
         elevation: 1,
-        automaticallyImplyLeading: false, // Impede a seta de voltar
+        automaticallyImplyLeading: false,
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(80),
+          preferredSize: const Size.fromHeight(116),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: CalendarTimeline(
-              initialDate: today, // Data inicial é hoje
-              firstDate: DateTime(
-                  today.year, today.month - 1, today.day), // Um mês antes
-              lastDate: nextMonth, // Data final é um mês depois
-              onDateSelected: (date) => print(date),
-              leftMargin: 20,
-              monthColor: Colors.blueGrey,
-              dayColor: Colors.teal[200],
-              activeDayColor: Colors.white,
-              activeBackgroundDayColor: Colors.redAccent[100],
-              selectableDayPredicate: (date) => date.day != 23,
-              locale: 'en_ISO',
+            padding:
+                const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
+            child: EasyDateTimeLine(
+              initialDate: DateTime.now(), // Data inicial necessária
+              onDateChange: (selectedDate) {
+                setState(() {});
+              },
+              headerProps: const EasyHeaderProps(
+                monthPickerType: MonthPickerType.switcher,
+                dateFormatter: DateFormatter.fullDateDMY(),
+              ),
+              dayProps: const EasyDayProps(
+                dayStructure: DayStructure.dayStrDayNum,
+                height: 60.0,
+                width: 60.0,
+                activeDayStyle: DayStyle(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xff3371FF),
+                        Color(0xff8426D6),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -67,24 +87,18 @@ class HomePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle("Today's workout"),
+              _buildSectionTitle("Personalized Training"),
+              _buildSectionSubitle(
+                  "Gain muscular mass with an individualized routine"),
               const SizedBox(height: 10),
               _buildWorkoutCard(),
               const SizedBox(height: 20),
-              _buildSectionTitle("Live sessions"),
+              _buildSectionTitle("My training sessions"),
+              _buildSectionSubitle("Create your own personalized routine"),
               const SizedBox(height: 10),
-              _buildLiveSessionCard(
-                title: "Bench press",
-                time: "Started at 11 AM 30/07/21",
-              ),
-              const SizedBox(height: 10),
-              _buildLiveSessionCard(
-                title: "Ab workout",
-                time: "Started at 11 AM 30/07/21",
-              ),
+              _buildMyWorkoutCards(),
               const SizedBox(height: 20),
-              _buildSectionTitle("Trainer details"),
-              const SizedBox(height: 10),
+              _buildSectionTitle("Your personal Trainer"),
               _buildTrainerCard(),
             ],
           ),
@@ -92,7 +106,7 @@ class HomePage extends StatelessWidget {
       ),
       bottomNavigationBar: const CustomBottomNavBar(
         currentIndex: 0,
-        currentRoute: 'homepage', // Define o índice da página atual
+        currentRoute: 'homepage',
       ),
     );
   }
@@ -100,13 +114,23 @@ class HomePage extends StatelessWidget {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      style: const TextStyle(
+          fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+    );
+  }
+
+  Widget _buildSectionSubitle(String title) {
+    return Text(
+      title,
+      style:
+          const TextStyle(fontSize: 14, color: Color.fromARGB(255, 49, 48, 48)),
     );
   }
 
   Widget _buildWorkoutCard() {
     return Card(
       elevation: 2,
+      color: Color(0xff3371FF),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -115,26 +139,21 @@ class HomePage extends StatelessWidget {
           children: [
             _buildWorkoutItem(
               icon: Icons.directions_run,
-              title: "Treadmill",
-              subtitle: "9070 m • 55:24 min",
+              title: "Ganho de Massa Muscular",
+              subtitle: "Hipertrofia • Balanceado",
             ),
-            const Divider(),
-            _buildWorkoutItem(
-              icon: Icons.fitness_center,
-              title: "Weights",
-              subtitle: "15 KGs • 45:24 min",
-            ),
-            const Divider(),
+            const SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
                 Text(
-                  "Better than Yesterday",
-                  style: TextStyle(fontSize: 16),
+                  "Progresso 0%",
+                  style: TextStyle(fontSize: 12, color: Colors.white),
                 ),
-                Text(
-                  "600 Cals",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                LinearProgressIndicator(
+                  value: 0.0,
+                  backgroundColor: Colors.white,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
                 ),
               ],
             ),
@@ -150,12 +169,13 @@ class HomePage extends StatelessWidget {
       required String subtitle}) {
     return Row(
       children: [
-        Icon(icon, color: Colors.blue, size: 30),
+        Icon(icon, color: Colors.orange, size: 30),
         const SizedBox(width: 10),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontSize: 16)),
+            Text(title,
+                style: const TextStyle(fontSize: 16, color: Colors.white)),
             Text(subtitle, style: const TextStyle(color: Colors.grey)),
           ],
         ),
@@ -163,23 +183,53 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildLiveSessionCard({required String title, required String time}) {
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: ListTile(
-        title: Text(title),
-        subtitle: Text(time),
-        trailing: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+  // Função que cria os cards de treino com scroll horizontal
+  Widget _buildMyWorkoutCards() {
+    return Container(
+      height: 150, // Define a altura dos cards
+      child: ListView(
+        scrollDirection: Axis.horizontal, // Definir scroll horizontal
+        children: [
+          _buildMyWorkoutCard(
+            title: "Treino Segunda a Quinta",
+            subtitle: "55 min de treino",
+            icon: Icons.fitness_center,
           ),
-          child: const Text(
-            "Watch",
-            style: TextStyle(color: Colors.white),
+          _buildMyWorkoutCard(
+            title: "Treino Sábado",
+            subtitle: "40 min de treino",
+            icon: Icons.fitness_center,
+          ),
+          _buildMyWorkoutCard(
+            title: "Treino Domingo",
+            subtitle: "50 min de treino",
+            icon: Icons.fitness_center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMyWorkoutCard(
+      {required String title,
+      required String subtitle,
+      required IconData icon}) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: Card(
+        elevation: 2,
+        color: Color(0xff3371FF),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: Colors.orange, size: 40),
+              const SizedBox(height: 10),
+              Text(title, style: const TextStyle(color: Colors.white)),
+              Text(subtitle, style: const TextStyle(color: Colors.grey)),
+            ],
           ),
         ),
       ),
