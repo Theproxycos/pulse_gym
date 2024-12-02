@@ -10,19 +10,49 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  DateTime today = DateTime.now(); // Data selecionada pelo usuário
+  DateTime? _selectedDate;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Seu código que depende do layout finalizado
+      print('Renderização concluída!');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    DateTime today = DateTime.now(); // Data de hoje
+    DateTime prevMonth = DateTime(
+      today.year,
+      today.month == 1
+          ? 12
+          : today.month -
+              1, // Se for janeiro, vai para dezembro do ano anterior
+      today.day,
+    ); // Um mês antes
+    DateTime nextMonth = DateTime(
+      today.year,
+      today.month == 12
+          ? 1
+          : today.month + 1, // Se for dezembro, vai para janeiro do próximo ano
+      today.day,
+    ); // Um mês depois
+
+    if (today.month == 12) {
+      nextMonth =
+          DateTime(today.year + 1, 1, today.day); // Janeiro do próximo ano
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize:
+              MainAxisSize.min, // Evitar que o título ocupe muito espaço
           children: [
             CircleAvatar(
               radius: 18,
@@ -44,16 +74,19 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         elevation: 1,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false, // Impede a seta de voltar
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(116),
+          preferredSize:
+              const Size.fromHeight(116), // Altura reduzida do calendário
           child: Padding(
             padding:
                 const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
             child: EasyDateTimeLine(
               initialDate: DateTime.now(), // Data inicial necessária
               onDateChange: (selectedDate) {
-                setState(() {});
+                setState(() {
+                  _selectedDate = selectedDate; // Atualiza a data selecionada
+                });
               },
               headerProps: const EasyHeaderProps(
                 monthPickerType: MonthPickerType.switcher,
@@ -96,7 +129,7 @@ class _HomePageState extends State<HomePage> {
               _buildSectionTitle("My training sessions"),
               _buildSectionSubitle("Create your own personalized routine"),
               const SizedBox(height: 10),
-              _buildMyWorkoutCards(),
+              _buildMyWorkoutCards(), // Cards com scroll horizontal
               const SizedBox(height: 20),
               _buildSectionTitle("Your personal Trainer"),
               _buildTrainerCard(),
@@ -183,29 +216,24 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Função que cria os cards de treino com scroll horizontal
+  List<Map<String, String>> workoutData = [
+    {'title': 'Treino Segunda a Quinta', 'subtitle': '55 min de treino'},
+    {'title': 'Treino Sábado', 'subtitle': '40 min de treino'},
+    {'title': 'Treino Domingo', 'subtitle': '50 min de treino'},
+  ];
+
   Widget _buildMyWorkoutCards() {
     return Container(
-      height: 150, // Define a altura dos cards
+      height: 150,
       child: ListView(
-        scrollDirection: Axis.horizontal, // Definir scroll horizontal
-        children: [
-          _buildMyWorkoutCard(
-            title: "Treino Segunda a Quinta",
-            subtitle: "55 min de treino",
+        scrollDirection: Axis.horizontal,
+        children: workoutData.map((workout) {
+          return _buildMyWorkoutCard(
+            title: workout['title']!,
+            subtitle: workout['subtitle']!,
             icon: Icons.fitness_center,
-          ),
-          _buildMyWorkoutCard(
-            title: "Treino Sábado",
-            subtitle: "40 min de treino",
-            icon: Icons.fitness_center,
-          ),
-          _buildMyWorkoutCard(
-            title: "Treino Domingo",
-            subtitle: "50 min de treino",
-            icon: Icons.fitness_center,
-          ),
-        ],
+          );
+        }).toList(),
       ),
     );
   }
@@ -245,7 +273,13 @@ class _HomePageState extends State<HomePage> {
           backgroundImage: AssetImage('assets/trainer_image.png'),
         ),
         title: const Text("Trainer name"),
-        subtitle: const Text("Contact details"),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text("Contact: trainer@example.com"),
+            Text("Specialization: Personal Trainer"),
+          ],
+        ),
       ),
     );
   }
