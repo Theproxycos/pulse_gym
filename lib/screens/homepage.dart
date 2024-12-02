@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:calendar_timeline/calendar_timeline.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
 
 class HomePage extends StatelessWidget {
@@ -6,11 +7,17 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DateTime today = DateTime.now(); // Data atual
+    DateTime nextMonth =
+        DateTime(today.year, today.month + 1, today.day); // Um mês depois
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
+          mainAxisSize:
+              MainAxisSize.min, // Evitar que o título ocupe muito espaço
           children: [
             CircleAvatar(
               radius: 18,
@@ -33,6 +40,26 @@ class HomePage extends StatelessWidget {
         ],
         elevation: 1,
         automaticallyImplyLeading: false, // Impede a seta de voltar
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(80),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: CalendarTimeline(
+              initialDate: today, // Data inicial é hoje
+              firstDate: DateTime(
+                  today.year, today.month - 1, today.day), // Um mês antes
+              lastDate: nextMonth, // Data final é um mês depois
+              onDateSelected: (date) => print(date),
+              leftMargin: 20,
+              monthColor: Colors.blueGrey,
+              dayColor: Colors.teal[200],
+              activeDayColor: Colors.white,
+              activeBackgroundDayColor: Colors.redAccent[100],
+              selectableDayPredicate: (date) => date.day != 23,
+              locale: 'en_ISO',
+            ),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
