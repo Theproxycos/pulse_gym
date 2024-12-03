@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../screens/homepage.dart';
-import '../screens/subscription_page.dart';
+import '../screens/exercises_page.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -50,13 +50,13 @@ class CustomBottomNavBar extends StatelessWidget {
           //   index: 2,
           //   targetPage: const ExplorePage(),
           // ),
-          // _buildNavItem(
-          //   context: context,
-          //   icon: Icons.euro,
-          //   label: "Exercizes",
-          //   index: 3,
-          //   targetPage: const ExercizesPage(),
-          // ),
+          _buildNavItem(
+            context: context,
+            icon: Icons.fitness_center,
+            label: "Exercises",
+            index: 3,
+            targetPage: ExercisesPage(),
+          ),
           // _buildNavItem(
           //   context: context,
           //   icon: Icons.person,
