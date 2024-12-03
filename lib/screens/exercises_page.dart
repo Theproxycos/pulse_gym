@@ -64,7 +64,7 @@ class _ExercisesPageState extends State<ExercisesPage> {
                     child: Container(
                       padding: const EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
-                        color: Colors.grey[800],
+                        color: Colors.grey[600],
                         borderRadius: BorderRadius.circular(10.0),
                         border: Border.all(
                           color: Colors.black,
