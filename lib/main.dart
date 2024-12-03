@@ -7,6 +7,7 @@ import 'screens/homepage.dart';
 import 'screens/subscription_page.dart';
 import 'screens/register_page.dart';
 import 'screens/exercises_page.dart';
+import 'screens/all_exercises.dart';
 
 void main() {
   runApp(const PulseGym());
@@ -28,6 +29,7 @@ class PulseGym extends StatelessWidget {
         '/register_page': (context) => RegisterPage(),
         '/settings_page': (context) => SettingsPage(),
         '/exercises_page': (context) => ExercisesPage(),
+        '/all_exercises': (context) => GymPage(),
       },
     );
   }
