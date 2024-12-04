@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import '../widgets/custom_bottom_nav_bar.dart';
 
 class GymPage extends StatefulWidget {
@@ -82,7 +81,7 @@ class _GymPageState extends State<GymPage> {
     try {
       final response = await http.get(
         Uri.parse(
-            'https://$apiHost/exercises?limit=50&offset=0'), // Aumente o limite para mais exercícios
+            'https://$apiHost/exercises?limit=400&offset=0'), // Aumente o limite para mais exercícios
         headers: {
           'X-RapidAPI-Key': apiKey,
           'X-RapidAPI-Host': apiHost,
@@ -131,20 +130,22 @@ class _GymPageState extends State<GymPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Select Muscle Part"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: bodyParts.map((bodyPart) {
-              return ListTile(
-                title: Text(bodyPart),
-                onTap: () {
-                  setState(() {
-                    selectedBodyPart = bodyPart;
-                    applyFilters();
-                  });
-                  Navigator.pop(context);
-                },
-              );
-            }).toList(),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: bodyParts.map((bodyPart) {
+                return ListTile(
+                  title: Text(bodyPart),
+                  onTap: () {
+                    setState(() {
+                      selectedBodyPart = bodyPart;
+                      applyFilters();
+                    });
+                    Navigator.pop(context);
+                  },
+                );
+              }).toList(),
+            ),
           ),
         );
       },
@@ -221,7 +222,7 @@ class _GymPageState extends State<GymPage> {
                             applyFilters();
                           });
                         },
-                        child: Text("All Exercises"),
+                        child: Text("All"),
                       ),
                       SizedBox(width: 10),
                       // Filtro de Grupos Musculares (Body Parts)
@@ -246,7 +247,7 @@ class _GymPageState extends State<GymPage> {
                       crossAxisCount: 2,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
-                      childAspectRatio: 1.2,
+                      childAspectRatio: 1.0,
                     ),
                     itemCount: filteredExercises.length,
                     itemBuilder: (context, index) {

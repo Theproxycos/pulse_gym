@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../screens/all_exercises.dart';
 import '../screens/homepage.dart';
-import '../screens/exercises_page.dart';
+import '../screens/all_exercises.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
