@@ -97,6 +97,7 @@ flutter:
     - lib/assets/musclesGroups/lower_back.png
     - lib/assets/musclesGroups/quadriceps.png
     - lib/assets/musclesGroups/cardio.png
+    - lib/assets/logo-nobg.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
