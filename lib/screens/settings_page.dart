@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/subscription_page.dart';
+import 'login.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -134,6 +135,16 @@ class SettingsPage extends StatelessWidget {
                   },
                 ),
               ],
+            ),
+            _buildButton(
+              context,
+              label: 'Logout',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
+              },
             ),
           ],
         ),

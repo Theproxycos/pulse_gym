@@ -30,7 +30,7 @@ class Login extends StatelessWidget {
                 children: [
                   // Imagem do título
                   Image.asset(
-                    'lib/assets/logo.png', // Substitua pelo caminho da sua imagem
+                    'lib/assets/logo-nobg.png', // Substitua pelo caminho da sua imagem
                     height: 80,
                   ),
                 ],
