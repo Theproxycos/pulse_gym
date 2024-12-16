@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../screens/all_exercises.dart';
 import '../screens/homepage.dart';
-<<<<<<< Updated upstream
-import '../screens/all_exercises.dart';
-=======
 import '../screens/exercises_page.dart';
 import '../screens/profile.dart';
->>>>>>> Stashed changes
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;

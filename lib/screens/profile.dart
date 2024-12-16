@@ -73,10 +73,10 @@ class ProfilePage extends StatelessWidget {
               Card(
                 child: ListTile(
                   leading: Icon(Icons.badge, size: 40, color: Colors.orange),
-                  title: Text('Nome, Email, Instagram, Telefone'),
+                  title: Text('Nome, Email, Telefone'),
                   trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
-                    // Navegar para edição de informações
+                    Navigator.pushNamed(context, '/editprofile');
                   },
                 ),
               ),
