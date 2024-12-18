@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +19,7 @@ class ProfilePage extends StatelessWidget {
                   Navigator.pushNamed(context, '/homepage');
                 }
               },
-              child: Row(
+              child: const Row(
                 children: [
                   Icon(Icons.arrow_back, color: Colors.black),
                   SizedBox(width: 5),
@@ -28,7 +30,7 @@ class ProfilePage extends StatelessWidget {
                 ],
               ),
             ),
-            Stack(
+            const Stack(
               children: [
                 Icon(Icons.notifications, color: Colors.black),
                 Positioned(
@@ -59,12 +61,14 @@ class ProfilePage extends StatelessWidget {
                 'lib/assets/logo-nobg.png', // Caminho para o logo
                 height: 80, // Altura ajustável
               ),
-              SizedBox(height: 30), // Distância entre o logo e as opções
+              const SizedBox(height: 30), // Distância entre o logo e as opções
               Card(
                 child: ListTile(
-                  leading: Icon(Icons.person, size: 40, color: Colors.orange),
-                  title: Text('Alterar foto'),
-                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                  leading:
+                      const Icon(Icons.person, size: 40, color: Colors.orange),
+                  title: const Text('Alterar foto'),
+                  trailing:
+                      const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
                     // Navegar para alteração de foto
                   },
@@ -72,9 +76,11 @@ class ProfilePage extends StatelessWidget {
               ),
               Card(
                 child: ListTile(
-                  leading: Icon(Icons.badge, size: 40, color: Colors.orange),
-                  title: Text('Nome, Email, Telefone'),
-                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                  leading:
+                      const Icon(Icons.badge, size: 40, color: Colors.orange),
+                  title: const Text('Nome, Email, Telefone'),
+                  trailing:
+                      const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
                     Navigator.pushNamed(context, '/editprofile');
                   },
@@ -82,19 +88,23 @@ class ProfilePage extends StatelessWidget {
               ),
               Card(
                 child: ListTile(
-                  leading: Icon(Icons.lock, size: 40, color: Colors.orange),
-                  title: Text('Atualizar senha'),
-                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                  leading:
+                      const Icon(Icons.lock, size: 40, color: Colors.orange),
+                  title: const Text('Atualizar senha'),
+                  trailing:
+                      const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
-                    // Navegar para atualização de senha
+                    Navigator.pushNamed(context, '/nova_senha');
                   },
                 ),
               ),
               Card(
                 child: ListTile(
-                  leading: Icon(Icons.language, size: 40, color: Colors.orange),
-                  title: Text('Alterar idioma'),
-                  trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                  leading: const Icon(Icons.language,
+                      size: 40, color: Colors.orange),
+                  title: const Text('Alterar idioma'),
+                  trailing:
+                      const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
                     // Navegar para alteração de idioma
                   },
