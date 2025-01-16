@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
+import 'WorkoutDetailPage.dart';
 import 'settings_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -116,10 +117,18 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 10),
               _buildWorkoutCard(),
               const SizedBox(height: 20),
-              _buildSectionTitle("My training sessions"),
+              // _buildSectionTitle("My training sessions"),
+              // _buildSectionSubitle("Create your own personalized routine"),
+              // const SizedBox(height: 10),
+              // _buildMyWorkoutCards(), // Cards com scroll horizontal
+
+              _buildSectionTitleWithButton("My training sessions", () {
+                _showAddWorkoutDialog();
+              }),
               _buildSectionSubitle("Create your own personalized routine"),
               const SizedBox(height: 10),
-              _buildMyWorkoutCards(), // Cards com scroll horizontal
+              _buildMyWorkoutCards(),
+
               const SizedBox(height: 20),
               _buildSectionTitle("Your personal Trainer"),
               _buildTrainerCard(),
@@ -139,6 +148,77 @@ class _HomePageState extends State<HomePage> {
       title,
       style: const TextStyle(
           fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+    );
+  }
+
+  Widget _buildSectionTitleWithButton(String title, VoidCallback onPressed) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.add, color: Colors.blue),
+          onPressed: onPressed,
+        ),
+      ],
+    );
+  }
+
+  void _showAddWorkoutDialog() {
+    final TextEditingController titleController = TextEditingController();
+    final TextEditingController subtitleController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Add New Workout"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(labelText: "Workout Title"),
+              ),
+              TextField(
+                controller: subtitleController,
+                decoration:
+                    const InputDecoration(labelText: "Workout Subtitle"),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o diálogo
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                if (titleController.text.isNotEmpty &&
+                    subtitleController.text.isNotEmpty) {
+                  setState(() {
+                    workoutData.add({
+                      'title': titleController.text,
+                      'subtitle': subtitleController.text,
+                    });
+                  });
+                  Navigator.of(context).pop(); // Fecha o diálogo
+                }
+              },
+              child: const Text("Add"),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -247,26 +327,41 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildMyWorkoutCard(
-      {required String title,
-      required String subtitle,
-      required IconData icon}) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
-      child: Card(
-        elevation: 2,
-        color: const Color(0xff3371FF),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(icon, color: Colors.orange, size: 40),
-              const SizedBox(height: 10),
-              Text(title, style: const TextStyle(color: Colors.white)),
-              Text(subtitle, style: const TextStyle(color: Colors.grey)),
-            ],
+  Widget _buildMyWorkoutCard({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WorkoutDetailPage(
+              title: title,
+              subtitle: subtitle,
+            ),
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(right: 16.0),
+        child: Card(
+          elevation: 2,
+          color: const Color(0xff3371FF),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(icon, color: Colors.orange, size: 40),
+                const SizedBox(height: 10),
+                Text(title, style: const TextStyle(color: Colors.white)),
+                Text(subtitle, style: const TextStyle(color: Colors.grey)),
+              ],
+            ),
           ),
         ),
       ),

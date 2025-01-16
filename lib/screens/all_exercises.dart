@@ -4,6 +4,10 @@ import 'package:http/http.dart' as http;
 import '../widgets/custom_bottom_nav_bar.dart';
 
 class GymPage extends StatefulWidget {
+  final Function(dynamic)? onExerciseSelected;
+
+  const GymPage({this.onExerciseSelected, Key? key}) : super(key: key);
+
   @override
   _GymPageState createState() => _GymPageState();
 }
@@ -19,7 +23,7 @@ class _GymPageState extends State<GymPage> {
   String searchQuery = "";
 
   final String apiKey =
-      'a5f6544e3bmsh3eb01b7e96b3e2ap13bb85jsn989013367bbe'; // Substituir pela sua API key.
+      'a5f6544e3bmsh3eb01b7e96b3e2ap13bb85jsn989013367bbe'; // Substitua pela sua chave de API.
   final String apiHost = 'exercisedb.p.rapidapi.com';
 
   @override
@@ -30,100 +34,98 @@ class _GymPageState extends State<GymPage> {
     fetchExercises();
   }
 
-  // Função para buscar os grupos musculares
+  // Busca os grupos musculares (body parts) da API
   Future<void> fetchBodyParts() async {
     try {
       final response = await http.get(
-        Uri.parse(
-            'https://$apiHost/exercises/bodyPartList'), // URL para bodyParts
+        Uri.parse('https://$apiHost/exercises/bodyPartList'),
         headers: {
           'X-RapidAPI-Key': apiKey,
           'X-RapidAPI-Host': apiHost,
         },
       );
-      final data = json.decode(response.body);
-
-      setState(() {
-        bodyParts =
-            List<String>.from(data); // Ajustar conforme a resposta da API
-        bodyParts.insert(0, 'all'); // Adicionar a opção "all"
-      });
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          bodyParts = List<String>.from(data);
+          bodyParts.insert(0, 'all'); // Adicionar a opção "all"
+        });
+      }
     } catch (e) {
       print("Erro ao buscar bodyParts: $e");
     }
   }
 
-  // Função para buscar os equipamentos
+  // Busca os equipamentos da API
   Future<void> fetchEquipment() async {
     try {
       final response = await http.get(
-        Uri.parse(
-            'https://$apiHost/exercises/equipmentList'), // URL para equipment
+        Uri.parse('https://$apiHost/exercises/equipmentList'),
         headers: {
           'X-RapidAPI-Key': apiKey,
           'X-RapidAPI-Host': apiHost,
         },
       );
-      final data = json.decode(response.body);
-
-      setState(() {
-        equipment =
-            List<String>.from(data); // Ajustar conforme a resposta da API
-        equipment.insert(0, 'all'); // Adicionar a opção "all"
-      });
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          equipment = List<String>.from(data);
+          equipment.insert(0, 'all'); // Adicionar a opção "all"
+        });
+      }
     } catch (e) {
       print("Erro ao buscar equipment: $e");
     }
   }
 
-  // Função para buscar os exercícios
+  // Busca todos os exercícios da API
   Future<void> fetchExercises() async {
     try {
       final response = await http.get(
-        Uri.parse(
-            'https://$apiHost/exercises?limit=400&offset=0'), // Aumente o limite para mais exercícios
+        Uri.parse('https://$apiHost/exercises'),
         headers: {
           'X-RapidAPI-Key': apiKey,
           'X-RapidAPI-Host': apiHost,
         },
       );
-
-      final data = json.decode(response.body);
-
-      setState(() {
-        exercises = data;
-        filteredExercises = data;
-        isLoading = false;
-      });
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          exercises = data;
+          filteredExercises = data;
+          isLoading = false;
+        });
+      }
     } catch (e) {
       print("Erro ao buscar exercícios: $e");
     }
   }
 
+  // Aplica os filtros de busca, bodyPart e equipamento
   void applyFilters() {
     setState(() {
       filteredExercises = exercises.where((exercise) {
         final matchesBodyPart = selectedBodyPart == 'all' ||
             exercise['bodyPart']?.toLowerCase() ==
-                selectedBodyPart.toLowerCase(); // Normalizar comparação
+                selectedBodyPart.toLowerCase();
 
         final matchesEquipment = selectedEquipment == 'all' ||
             exercise['equipment']?.toLowerCase() ==
-                selectedEquipment.toLowerCase(); // Normalizar comparação
+                selectedEquipment.toLowerCase();
 
         final matchesSearch = searchQuery.isEmpty ||
-                exercise['name']!
+            (exercise['name'] != null &&
+                exercise['name']
                     .toString()
                     .toLowerCase()
-                    .contains(searchQuery.toLowerCase()) ??
-            false;
+                    .contains(searchQuery.toLowerCase()));
 
         return matchesBodyPart && matchesEquipment && matchesSearch;
       }).toList();
     });
   }
 
-  // Função para mostrar a janela de filtro de "Muscle Parts"
+  // Exibe o modal para selecionar body parts
   void showBodyPartsFilter() {
     showDialog(
       context: context,
@@ -152,7 +154,7 @@ class _GymPageState extends State<GymPage> {
     );
   }
 
-  // Função para mostrar a janela de filtro de "Equipments"
+  // Exibe o modal para selecionar equipamentos
   void showEquipmentFilter() {
     showDialog(
       context: context,
@@ -160,7 +162,6 @@ class _GymPageState extends State<GymPage> {
         return AlertDialog(
           title: Text("Select Equipment"),
           content: SingleChildScrollView(
-            // Adicionando o scroll vertical
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: equipment.map((equip) {
@@ -192,7 +193,7 @@ class _GymPageState extends State<GymPage> {
           ? Center(child: CircularProgressIndicator())
           : Column(
               children: [
-                // Barra de Busca
+                // Barra de busca
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
@@ -212,7 +213,7 @@ class _GymPageState extends State<GymPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     children: [
-                      // Filtro de "All" - Exibe todos os exercícios
+                      // Filtro "All"
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
@@ -225,13 +226,13 @@ class _GymPageState extends State<GymPage> {
                         child: Text("All"),
                       ),
                       SizedBox(width: 10),
-                      // Filtro de Grupos Musculares (Body Parts)
+                      // Filtro de grupos musculares
                       ElevatedButton(
                         onPressed: showBodyPartsFilter,
                         child: Text("Muscle Parts"),
                       ),
                       SizedBox(width: 10),
-                      // Filtro de Equipamentos
+                      // Filtro de equipamentos
                       ElevatedButton(
                         onPressed: showEquipmentFilter,
                         child: Text("Equipments"),
@@ -239,7 +240,7 @@ class _GymPageState extends State<GymPage> {
                     ],
                   ),
                 ),
-                // Grid de Exercícios
+                // Grid com os exercícios
                 Expanded(
                   child: GridView.builder(
                     padding: const EdgeInsets.all(8.0),
@@ -254,6 +255,20 @@ class _GymPageState extends State<GymPage> {
                       final exercise = filteredExercises[index];
                       return GestureDetector(
                         onTap: () {
+                          if (Navigator.canPop(context)) {
+                            // Apenas fecha a página se houver uma anterior no histórico
+                            Navigator.pop(context, exercise);
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ExerciseDetailPage(exercise: exercise),
+                              ),
+                            );
+                          }
+                        },
+                        onLongPress: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(

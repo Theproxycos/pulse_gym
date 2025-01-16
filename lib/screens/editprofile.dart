@@ -4,37 +4,52 @@ class Editprofile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   title: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       GestureDetector(
+      //         onTap: () {
+      //           if (Navigator.canPop(context)) {
+      //             Navigator.pop(context);
+      //           } else {
+      //             Navigator.pushNamed(context, '/homepage');
+      //           }
+      //         },
+      //         child: Row(
+      //           children: [
+      //             Icon(Icons.arrow_back, color: Colors.black),
+      //             SizedBox(width: 5),
+      //             Text(
+      //               'Back',
+      //               style: TextStyle(color: Colors.black),
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //       SizedBox(
+      //           width:
+      //               24), // Placeholder para alinhar com o ícone de notificação, se necessário
+      //     ],
+      //   ),
+      //   backgroundColor: Colors.white,
+      //   elevation: 0,
+      // ),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                } else {
-                  Navigator.pushNamed(context, '/homepage');
-                }
-              },
-              child: Row(
-                children: [
-                  Icon(Icons.arrow_back, color: Colors.black),
-                  SizedBox(width: 5),
-                  Text(
-                    'Back',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-                width:
-                    24), // Placeholder para alinhar com o ícone de notificação, se necessário
-          ],
-        ),
+        title: const Text('Edit Profile'),
         backgroundColor: Colors.white,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushNamed(context, '/homepage');
+            }
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

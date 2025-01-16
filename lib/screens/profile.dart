@@ -8,50 +8,53 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   title: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       GestureDetector(
+      //         onTap: () {
+      //           if (Navigator.canPop(context)) {
+      //             Navigator.pop(context);
+      //           } else {
+      //             Navigator.pushNamed(context, '/homepage');
+      //           }
+      //         },
+      //         child: const Row(
+      //           children: [
+      //             Icon(Icons.arrow_back, color: Colors.black),
+      //             SizedBox(width: 5),
+      //             Text(
+      //               'Back',
+      //               style: TextStyle(color: Colors.black),
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //       const Stack(
+      //         children: [
+      //           Icon(Icons.notifications, color: Colors.black),
+      //           Positioned(
+      //             right: 0,
+      //             child: CircleAvatar(
+      //               backgroundColor: Colors.red,
+      //               radius: 8,
+      //               child: Text(
+      //                 '1',
+      //                 style: TextStyle(color: Colors.white, fontSize: 12),
+      //               ),
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ],
+      //   ),
+      //   backgroundColor: Colors.white,
+      //   elevation: 0,
+      // ),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                } else {
-                  Navigator.pushNamed(context, '/homepage');
-                }
-              },
-              child: const Row(
-                children: [
-                  Icon(Icons.arrow_back, color: Colors.black),
-                  SizedBox(width: 5),
-                  Text(
-                    'Back',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ],
-              ),
-            ),
-            const Stack(
-              children: [
-                Icon(Icons.notifications, color: Colors.black),
-                Positioned(
-                  right: 0,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.red,
-                    radius: 8,
-                    child: Text(
-                      '1',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
+        title: const Text('Profile'),
       ),
       body: Container(
         color: Colors.white,
@@ -114,8 +117,8 @@ class ProfilePage extends StatelessWidget {
               ),
               Card(
                 child: ListTile(
-                  leading:
-                      const Icon(Icons.currency_exchange, size: 40, color: Colors.orange),
+                  leading: const Icon(Icons.currency_exchange,
+                      size: 40, color: Colors.orange),
                   title: const Text('Subscription'),
                   trailing:
                       const Icon(Icons.arrow_forward_ios, color: Colors.grey),
