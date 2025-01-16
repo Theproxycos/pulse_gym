@@ -82,7 +82,7 @@ class _GymPageState extends State<GymPage> {
   Future<void> fetchExercises() async {
     try {
       final response = await http.get(
-        Uri.parse('https://$apiHost/exercises'),
+        Uri.parse('https://$apiHost/exercises?limit=400&offset=0'),
         headers: {
           'X-RapidAPI-Key': apiKey,
           'X-RapidAPI-Host': apiHost,
