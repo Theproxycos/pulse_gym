@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/custom_bottom_nav_bar.dart';
+
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
@@ -24,7 +26,7 @@ class ProfilePage extends StatelessWidget {
                   Icon(Icons.arrow_back, color: Colors.black),
                   SizedBox(width: 5),
                   Text(
-                    'Voltar',
+                    'Back',
                     style: TextStyle(color: Colors.black),
                   ),
                 ],
@@ -39,7 +41,7 @@ class ProfilePage extends StatelessWidget {
                     backgroundColor: Colors.red,
                     radius: 8,
                     child: Text(
-                      '2',
+                      '1',
                       style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ),
@@ -66,7 +68,7 @@ class ProfilePage extends StatelessWidget {
                 child: ListTile(
                   leading:
                       const Icon(Icons.person, size: 40, color: Colors.orange),
-                  title: const Text('Alterar foto'),
+                  title: const Text('Change Profile Picture'),
                   trailing:
                       const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
@@ -78,7 +80,7 @@ class ProfilePage extends StatelessWidget {
                 child: ListTile(
                   leading:
                       const Icon(Icons.badge, size: 40, color: Colors.orange),
-                  title: const Text('Nome, Email, Telefone'),
+                  title: const Text('Edit Profile'),
                   trailing:
                       const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
@@ -90,7 +92,7 @@ class ProfilePage extends StatelessWidget {
                 child: ListTile(
                   leading:
                       const Icon(Icons.lock, size: 40, color: Colors.orange),
-                  title: const Text('Atualizar senha'),
+                  title: const Text('Change Password'),
                   trailing:
                       const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
@@ -102,7 +104,7 @@ class ProfilePage extends StatelessWidget {
                 child: ListTile(
                   leading: const Icon(Icons.language,
                       size: 40, color: Colors.orange),
-                  title: const Text('Alterar idioma'),
+                  title: const Text('Change Language'),
                   trailing:
                       const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
@@ -110,9 +112,25 @@ class ProfilePage extends StatelessWidget {
                   },
                 ),
               ),
+              Card(
+                child: ListTile(
+                  leading:
+                      const Icon(Icons.currency_exchange, size: 40, color: Colors.orange),
+                  title: const Text('Subscription'),
+                  trailing:
+                      const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/subscription_page');
+                  },
+                ),
+              ),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: const CustomBottomNavBar(
+        currentIndex: 4,
+        currentRoute: 'Profile',
       ),
     );
   }

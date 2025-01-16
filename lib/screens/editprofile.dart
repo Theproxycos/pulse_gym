@@ -22,7 +22,7 @@ class Editprofile extends StatelessWidget {
                   Icon(Icons.arrow_back, color: Colors.black),
                   SizedBox(width: 5),
                   Text(
-                    'Voltar',
+                    'Back',
                     style: TextStyle(color: Colors.black),
                   ),
                 ],
@@ -43,20 +43,20 @@ class Editprofile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Editar dados do perfil',
+                'Edit Profile',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
               TextField(
                 decoration: InputDecoration(
-                  labelText: 'Nome',
+                  labelText: 'Name',
                   border: OutlineInputBorder(),
                 ),
               ),
               SizedBox(height: 20),
               TextField(
                 decoration: InputDecoration(
-                  labelText: 'Sobrenome',
+                  labelText: 'Surname',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -71,7 +71,7 @@ class Editprofile extends StatelessWidget {
               TextField(
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
-                  labelText: 'WhatsApp',
+                  labelText: 'Phone Number',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -89,7 +89,7 @@ class Editprofile extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Salvar',
+                    'Save',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.orange,

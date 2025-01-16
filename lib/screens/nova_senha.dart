@@ -13,7 +13,7 @@ class _NovaSenhaState extends State<NovaSenha> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Atualizar Senha'),
+        title: const Text('Change Password'),
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
@@ -33,12 +33,12 @@ class _NovaSenhaState extends State<NovaSenha> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 32),
-            const Text('Nova Senha'),
+            const Text('New Password'),
             const SizedBox(height: 8),
             TextField(
               obscureText: !_novaSenhaVisivel,
               decoration: InputDecoration(
-                hintText: 'Digite a nova senha',
+                hintText: 'New Password',
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -54,12 +54,12 @@ class _NovaSenhaState extends State<NovaSenha> {
               ),
             ),
             const SizedBox(height: 16),
-            const Text('Confirme a Senha'),
+            const Text('Confirm New Password'),
             const SizedBox(height: 8),
             TextField(
               obscureText: !_confirmeSenhaVisivel,
               decoration: InputDecoration(
-                hintText: 'Confirme a senha',
+                hintText: 'Confirm New Password',
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -96,7 +96,7 @@ class _NovaSenhaState extends State<NovaSenha> {
                             vertical: 15.0, horizontal: 24.0),
                       ),
                       child: const Text(
-                        'Trocar',
+                        'Change Password',
                         style: TextStyle(
                             color: Colors.orange,
                             fontSize: 16,
@@ -121,7 +121,7 @@ class _NovaSenhaState extends State<NovaSenha> {
                             vertical: 15.0, horizontal: 24.0),
                       ),
                       child: const Text(
-                        'Cancelar',
+                        'Cancel',
                         style: TextStyle(
                             color: Colors.grey,
                             fontSize: 16,

@@ -165,8 +165,8 @@ class _HomePageState extends State<HomePage> {
             children: [
               _buildWorkoutItem(
                 icon: Icons.directions_run,
-                title: "Ganho de Massa Muscular",
-                subtitle: "Hipertrofia • Balanceado",
+                title: "Gain Body Mass",
+                subtitle: "Hypertrophy • Balanced",
               ),
               const SizedBox(height: 15),
               Row(
@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                         CrossAxisAlignment.start, // Alinha o texto à esquerda
                     children: [
                       Text(
-                        "Progresso 0%",
+                        "Progress 0%",
                         style: TextStyle(fontSize: 12, color: Colors.white),
                       ),
                       SizedBox(
