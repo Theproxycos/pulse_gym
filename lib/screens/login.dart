@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // For Firestore
-import 'package:firebase_auth/firebase_auth.dart'; // Optional, for Firebase Authentication
 import 'register_page.dart';
 
 void main() {
