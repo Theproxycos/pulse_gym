@@ -26,7 +26,13 @@ flutter_native_splash:
   image: lib/assets/splash_image.png # Path to your logo
   android: true # Enable Android splash customization
   ios: true # Enable iOS splash customization
-
+  android_12:
+    image: lib/assets/splash_image.png
+flutter_launcher_icons:
+  android: "launcher_icon"
+  image_path: "lib/assets/splash_image.png"
+  ios: true
+  min_sdk_android: 21
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -40,6 +46,9 @@ dependencies:
   select_body_parts: ^0.0.1
   http: ^1.2.2
   flutter_native_splash: ^2.3.0
+  firebase_core: ^3.10.0
+  flutter_launcher_icons: ^0.13.1
+
 
 
 

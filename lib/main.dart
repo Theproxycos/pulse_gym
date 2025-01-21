@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pulse_gym/firebase_options.dart';
 import 'package:pulse_gym/screens/exercises_page.dart';
 import 'screens/settings_page.dart';
 import 'screens/newpass.dart';
@@ -12,7 +14,11 @@ import 'screens/profile.dart';
 import 'screens/editprofile.dart';
 import 'screens/nova_senha.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const PulseGym());
 }
 

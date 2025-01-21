@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "88804058820",
+    "project_id": "gymapp-4c41b",
+    "storage_bucket": "gymapp-4c41b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88804058820:android:da842615bf459a30be0b91",
+        "android_client_info": {
+          "package_name": "com.gymapp.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN8IuOqiud2A5E8IUC1f-sGaQLCeLfDDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88804058820:android:f46c958045b7a118be0b91",
+        "android_client_info": {
+          "package_name": "com.pulsegym.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN8IuOqiud2A5E8IUC1f-sGaQLCeLfDDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88804058820:android:783f3a32988a1ababe0b91",
+        "android_client_info": {
+          "package_name": "com.trab1.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN8IuOqiud2A5E8IUC1f-sGaQLCeLfDDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
