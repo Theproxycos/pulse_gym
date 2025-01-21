@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Para formatar a data
+import 'package:intl/intl.dart';
+import '../services/firestore.dart'; // For Firestore service
+import 'package:email_validator/email_validator.dart'; // For email format validation
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -9,10 +11,15 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  // Variável para armazenar o valor selecionado (Male ou Female)
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordconfirmController =
+      TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  String _selectedCountry = '';
   String _gender = '';
-
-  // Controlador para o campo de texto da data de nascimento
   final TextEditingController _dateController = TextEditingController();
 
   @override
@@ -37,10 +44,9 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
             const SizedBox(height: 10),
-            // Username Field
-            _buildTextField('Username', isRequired: true),
+            _buildTextField('Username',
+                controller: _usernameController, isRequired: true),
             const SizedBox(height: 10),
-            // Country and Phone Number Row
             Row(
               children: [
                 Expanded(
@@ -48,15 +54,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     'Phone number',
                     isRequired: true,
                     keyboardType: TextInputType.phone,
+                    controller: _phoneController,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            // Email Field
-            _buildTextField('Email', isRequired: true),
+            _buildTextField('Email',
+                isRequired: true, controller: _emailController),
             const SizedBox(height: 10),
-            // Gender Selection
             Row(
               children: [
                 const Text(
@@ -106,24 +112,112 @@ class _RegisterPageState extends State<RegisterPage> {
               ],
             ),
             const SizedBox(height: 10),
-            // Date of Birth Field
             _buildDatePickerField('Date of birth'),
             const SizedBox(height: 10),
-            // Password and Re-enter Password Fields
-            _buildTextField('Password', isPassword: true),
+            _buildTextField('Password',
+                isPassword: true, controller: _passwordController),
             const SizedBox(height: 10),
-            _buildTextField('Re-enter Password', isPassword: true),
+            _buildTextField('Re-enter Password',
+                isPassword: true, controller: _passwordconfirmController),
             const SizedBox(height: 10),
-            // Address Field
-            _buildTextField('Address'),
+            _buildTextField('Address', controller: _addressController),
             const SizedBox(height: 10),
-            // Location Dropdown
             _buildDropdown('Country'),
             const SizedBox(height: 20),
-            // Register Button
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  FirestoreService firestoreService = FirestoreService();
+
+                  // Check if required fields are filled
+                  if (_usernameController.text.isEmpty ||
+                      _phoneController.text.isEmpty ||
+                      _emailController.text.isEmpty ||
+                      _gender.isEmpty ||
+                      _dateController.text.isEmpty ||
+                      _passwordController.text.isEmpty ||
+                      _passwordconfirmController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Please fill in all required fields')),
+                    );
+                    return;
+                  }
+
+                  // Check if email format is valid
+                  if (!EmailValidator.validate(_emailController.text)) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Invalid email format')),
+                    );
+                    return;
+                  }
+                  // Check if username already exists
+                  bool usernameExists = await firestoreService
+                      .doesUsernameExist(_usernameController.text);
+                  if (usernameExists) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Username already taken')),
+                    );
+                    return; // Prevent registration if username exists
+                  }
+
+                  // Check if date of birth is valid
+                  DateTime? dateOfBirth = DateFormat('dd/MM/yyyy')
+                      .parse(_dateController.text, true);
+                  if (dateOfBirth.isAfter(DateTime.now())) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Invalid date of birth')),
+                    );
+                    return; // Prevent registration if date of birth is in the future
+                  }
+
+                  // Check if password and re-entered password match
+                  if (_passwordController.text !=
+                      _passwordconfirmController.text) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Passwords do not match')),
+                    );
+                    return;
+                  }
+
+                  try {
+                    // Check if email exists in Firestore
+                    bool emailExists = await firestoreService
+                        .emailExists(_emailController.text);
+
+                    if (emailExists) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Email already exists')),
+                      );
+                      return;
+                    }
+
+                    // Register user if email doesn't exist
+                    await firestoreService.registerUser(
+                      username: _usernameController.text,
+                      phoneNumber: _phoneController.text,
+                      email: _emailController.text,
+                      gender: _gender,
+                      dateOfBirth: _dateController.text,
+                      password: _passwordController.text,
+                      address: _addressController.text,
+                      country: _selectedCountry,
+                    );
+
+                    // Show success message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('User registered successfully!')),
+                    );
+
+                    // Redirect to login page
+                    Navigator.of(context).pushReplacementNamed('/login');
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error: $e')),
+                    );
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
@@ -147,8 +241,10 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _buildTextField(String label,
       {bool isPassword = false,
       bool isRequired = false,
-      TextInputType keyboardType = TextInputType.text}) {
+      TextInputType keyboardType = TextInputType.text,
+      required TextEditingController controller}) {
     return TextField(
+      controller: controller,
       obscureText: isPassword,
       keyboardType: keyboardType,
       decoration: InputDecoration(
@@ -227,7 +323,11 @@ class _RegisterPageState extends State<RegisterPage> {
             value: 'United Kingdom', child: Text('United Kingdom')),
         DropdownMenuItem(value: 'Vatican City', child: Text('Vatican City')),
       ],
-      onChanged: (value) {},
+      onChanged: (value) {
+        setState(() {
+          _selectedCountry = value!;
+        });
+      },
     );
   }
 
