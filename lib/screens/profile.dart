@@ -1,58 +1,15 @@
 import 'package:flutter/material.dart';
-
 import '../widgets/custom_bottom_nav_bar.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final String userId; // Add the userId parameter
+
+  // Pass the userId to the constructor
+  const ProfilePage({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   title: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: [
-      //       GestureDetector(
-      //         onTap: () {
-      //           if (Navigator.canPop(context)) {
-      //             Navigator.pop(context);
-      //           } else {
-      //             Navigator.pushNamed(context, '/homepage');
-      //           }
-      //         },
-      //         child: const Row(
-      //           children: [
-      //             Icon(Icons.arrow_back, color: Colors.black),
-      //             SizedBox(width: 5),
-      //             Text(
-      //               'Back',
-      //               style: TextStyle(color: Colors.black),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //       const Stack(
-      //         children: [
-      //           Icon(Icons.notifications, color: Colors.black),
-      //           Positioned(
-      //             right: 0,
-      //             child: CircleAvatar(
-      //               backgroundColor: Colors.red,
-      //               radius: 8,
-      //               child: Text(
-      //                 '1',
-      //                 style: TextStyle(color: Colors.white, fontSize: 12),
-      //               ),
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //     ],
-      //   ),
-      //   backgroundColor: Colors.white,
-      //   elevation: 0,
-      // ),
       appBar: AppBar(
         title: const Text('Profile'),
       ),
@@ -63,10 +20,10 @@ class ProfilePage extends StatelessWidget {
           child: Column(
             children: [
               Image.asset(
-                'lib/assets/logo-nobg.png', // Caminho para o logo
-                height: 80, // Altura ajustável
+                'lib/assets/logo-nobg.png', // Path to the logo
+                height: 80, // Adjustable height
               ),
-              const SizedBox(height: 30), // Distância entre o logo e as opções
+              const SizedBox(height: 30), // Distance between logo and options
               Card(
                 child: ListTile(
                   leading:
@@ -75,7 +32,7 @@ class ProfilePage extends StatelessWidget {
                   trailing:
                       const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
-                    // Navegar para alteração de foto
+                    // Navigate to profile picture change page
                   },
                 ),
               ),
@@ -111,7 +68,7 @@ class ProfilePage extends StatelessWidget {
                   trailing:
                       const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
-                    // Navegar para alteração de idioma
+                    // Navigate to language change page
                   },
                 ),
               ),
@@ -131,9 +88,10 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const CustomBottomNavBar(
-        currentIndex: 4,
+      bottomNavigationBar: CustomBottomNavBar(
+        currentIndex: 4, // Set the current index for the profile page
         currentRoute: 'Profile',
+        userId: userId, // Pass userId to the bottom nav bar
       ),
     );
   }

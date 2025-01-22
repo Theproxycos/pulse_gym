@@ -5,8 +5,13 @@ import '../widgets/custom_bottom_nav_bar.dart';
 
 class GymPage extends StatefulWidget {
   final Function(dynamic)? onExerciseSelected;
+  final String userId; // Add userId parameter
 
-  const GymPage({this.onExerciseSelected, Key? key}) : super(key: key);
+  const GymPage({
+    this.onExerciseSelected,
+    required this.userId, // Make userId a required field
+    Key? key,
+  }) : super(key: key);
 
   @override
   _GymPageState createState() => _GymPageState();
@@ -284,9 +289,10 @@ class _GymPageState extends State<GymPage> {
                 ),
               ],
             ),
-      bottomNavigationBar: const CustomBottomNavBar(
+      bottomNavigationBar: CustomBottomNavBar(
         currentIndex: 3,
-        currentRoute: 'Exercises',
+        currentRoute: 'Exercises', 
+         userId: widget.userId,
       ),
     );
   }

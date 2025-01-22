@@ -7,11 +7,13 @@ import '../screens/profile.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
+  final String userId; // Add this parameter
 
   const CustomBottomNavBar({
     super.key,
     required this.currentIndex,
     required String currentRoute,
+    required this.userId, // Accept the userId
   });
 
   @override
@@ -36,35 +38,35 @@ class CustomBottomNavBar extends StatelessWidget {
             icon: Icons.home,
             label: "Home",
             index: 0,
-            targetPage: const HomePage(),
+            targetPage: HomePage(userId: userId), // Pass the userId here
           ),
           // _buildNavItem(
           //   context: context,
           //   icon: Icons.fitness_center,
           //   label: "Activity",
           //   index: 1,
-          //   targetPage: const ActivityPage(),
+          //   targetPage: const ActivityPage(userId: userId),
           // ),
           // _buildNavItem(
           //   context: context,
           //   icon: Icons.euro,
           //   label: "Explore",
           //   index: 2,
-          //   targetPage: const ExplorePage(),
+          //   targetPage: const ExplorePage(userId: userId),
           // ),
           _buildNavItem(
             context: context,
             icon: Icons.fitness_center,
             label: "Exercises",
             index: 3,
-            targetPage: GymPage(),
+            targetPage: GymPage(userId: userId),
           ),
           _buildNavItem(
             context: context,
             icon: Icons.person,
             label: "Profile",
             index: 4,
-            targetPage: ProfilePage(),
+            targetPage: ProfilePage(userId: userId),
           ),
         ],
       ),

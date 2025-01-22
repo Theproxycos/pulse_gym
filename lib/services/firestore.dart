@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // Check if a username exists
   Future<bool> doesUsernameExist(String username) async {
     final querySnapshot = await _firestore
         .collection('users')
@@ -11,6 +12,7 @@ class FirestoreService {
     return querySnapshot.docs.isNotEmpty;
   }
 
+  // Check if an email exists
   Future<bool> emailExists(String email) async {
     try {
       var querySnapshot = await _firestore
@@ -24,7 +26,7 @@ class FirestoreService {
     }
   }
 
-  // Method to register a new user
+  // Method to register a new user and create a subcollection
   Future<void> registerUser({
     required String username,
     required String phoneNumber,
@@ -38,8 +40,9 @@ class FirestoreService {
     try {
       // Reference to the 'users' collection
       CollectionReference users = _firestore.collection('users');
-      // Add user data to Firestore
-      await users.add({
+
+      // Add user data to Firestore and get the document reference
+      DocumentReference userDocRef = await users.add({
         'username': username,
         'phone_number': phoneNumber,
         'email': email,
@@ -51,10 +54,71 @@ class FirestoreService {
         'created_at': FieldValue.serverTimestamp(),
       });
 
-      print('User registered successfully.');
+      // Add a default workoutCards subcollection for the user
+      await userDocRef.collection('workoutCards').add({
+        'title': 'Default Workout',
+        'subtitle': 'Sample Workout Plan',
+        'exercises': [
+          {
+            'name': 'Push-up',
+            'bodyPart': 'Chest',
+            'equipment': 'Bodyweight',
+            'gifUrl': 'https://example.com/pushup.gif',
+          },
+        ],
+      });
+
+      print('User registered successfully with a default workout card.');
     } catch (e) {
       print('Error registering user: $e');
       throw Exception('Failed to register user.');
+    }
+  }
+
+  // Method to add a workout card for a user (needs valid userId)
+  Future<void> addWorkoutCard(String userId, Map<String, dynamic> workoutCard) async {
+    try {
+      // Ensure userId is valid (not null or empty)
+      if (userId.isEmpty) {
+        throw Exception('Invalid userId');
+      }
+
+      // Get the user document reference based on userId
+      DocumentReference userDocRef = _firestore.collection('users').doc(userId);
+
+      // Add a workout card to the 'workoutCards' subcollection of the user
+      await userDocRef.collection('workoutCards').add(workoutCard);
+      print('Workout card added successfully for user $userId');
+    } catch (e) {
+      print('Error adding workout card: $e');
+      throw Exception('Failed to add workout card');
+    }
+  }
+
+  // Example method for fetching workout cards for a user
+  Future<List<Map<String, dynamic>>> getWorkoutCards(String userId) async {
+    try {
+      // Ensure userId is valid (not null or empty)
+      if (userId.isEmpty) {
+        throw Exception('Invalid userId');
+      }
+
+      // Get the workoutCards subcollection for the user
+      QuerySnapshot snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('workoutCards')
+          .get();
+
+      // Map each document in the subcollection to a Map
+      List<Map<String, dynamic>> workoutCards = snapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+
+      return workoutCards;
+    } catch (e) {
+      print('Error fetching workout cards: $e');
+      throw Exception('Failed to fetch workout cards');
     }
   }
 }

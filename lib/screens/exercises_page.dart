@@ -3,7 +3,9 @@ import '../data/muscle_groups.dart';
 import '../widgets/custom_bottom_nav_bar.dart'; // Supondo que você tenha uma lista de grupos musculares com suas imagens.
 
 class ExercisesPage extends StatefulWidget {
-  const ExercisesPage({super.key});
+  final String userId; // Add userId parameter
+
+  const ExercisesPage({required this.userId, super.key}); // Make userId a required field
 
   @override
   _ExercisesPageState createState() => _ExercisesPageState();
@@ -102,9 +104,10 @@ class _ExercisesPageState extends State<ExercisesPage> {
           ),
         ],
       ),
-      bottomNavigationBar: const CustomBottomNavBar(
+      bottomNavigationBar: CustomBottomNavBar(
         currentIndex: 3,
-        currentRoute: 'Exercises',
+        currentRoute: 'Exercises', 
+         userId: widget.userId,
       ),
     );
   }

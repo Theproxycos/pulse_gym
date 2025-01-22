@@ -42,6 +42,7 @@ flutter_launcher_icons:
 dependencies:
   flutter:
     sdk: flutter
+  shared_preferences: ^2.0.16  # Add this line (check for the latest version)
   easy_date_timeline: ^2.0.4
   select_body_parts: ^0.0.1
   http: ^1.2.2

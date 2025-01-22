@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // For Firestore
+import 'package:shared_preferences/shared_preferences.dart';
+import 'homepage.dart';
 import 'register_page.dart';
 
 void main() {
@@ -61,17 +63,29 @@ class _LoginFormState extends State<LoginForm> {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
           .collection('users') // Replace with your Firestore collection name
           .where('username', isEqualTo: username)
-          .where('password', isEqualTo: password) // Use hashed passwords in production
+          .where('password',
+              isEqualTo: password) // Use hashed passwords in production
           .get();
 
       if (snapshot.docs.isNotEmpty) {
         // Login successful
+        String userId = snapshot.docs.first.id; // Get the userId (document ID)
+        print('loginpage: $userId'); // Debugging
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login successful!')),
         );
 
+        // Save userId to SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', userId);
+
         // Redirect to homepage
-        Navigator.of(context).pushReplacementNamed('/homepage');
+        // Navigator.of(context).pushReplacementNamed('/homepage');
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => HomePage(userId: snapshot.docs.first.id),
+          ),
+        );
       } else {
         // Login failed
         ScaffoldMessenger.of(context).showSnackBar(

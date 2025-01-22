@@ -7,17 +7,23 @@ import 'all_exercises.dart';
 class WorkoutDetailPage extends StatefulWidget {
   final String title;
   final String subtitle;
+  final String userId;
 
-  const WorkoutDetailPage(
-      {required this.title, required this.subtitle, Key? key})
-      : super(key: key);
+  const WorkoutDetailPage({
+    required this.title,
+    required this.subtitle,
+    Key? key, required this.userId,
+  }) : super(key: key);
 
   @override
   State<WorkoutDetailPage> createState() => _WorkoutDetailPageState();
 }
 
 class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
-  List<dynamic> selectedExercises = [];
+  static final Map<String, List<dynamic>> workoutExercises = {};
+
+  List<dynamic> get selectedExercises =>
+      workoutExercises[widget.title] ??= [];
 
   void _navigateToAllExercises(BuildContext context) async {
     final selectedExercise = await Navigator.push(
@@ -25,16 +31,15 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
       MaterialPageRoute(
         builder: (context) => GymPage(
           onExerciseSelected: (exercise) {
-            Navigator.pop(context, exercise); // Retorna o exercício selecionado
-          },
+            Navigator.pop(context, exercise); // Return selected exercise
+          }, userId: widget.userId,
         ),
       ),
     );
 
     if (selectedExercise != null) {
       setState(() {
-        selectedExercises
-            .add(selectedExercise); // Adiciona à lista de exercícios
+        selectedExercises.add(selectedExercise);
       });
     }
   }
@@ -62,18 +67,6 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
             Text(
               widget.subtitle,
               style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Função para iniciar o treino
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-              ),
-              child: const Text("Start workout"),
             ),
             const SizedBox(height: 16),
             const Text(

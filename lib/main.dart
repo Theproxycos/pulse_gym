@@ -13,33 +13,47 @@ import 'screens/all_exercises.dart';
 import 'screens/profile.dart';
 import 'screens/editprofile.dart';
 import 'screens/nova_senha.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const PulseGym());
+  
+  // Retrieve userId from SharedPreferences
+  final String? userId = await getUserId();
+      print('main: $userId'); // Debugging
+
+  runApp(PulseGym(userId: userId));
+}
+
+// Fetch userId from SharedPreferences
+Future<String?> getUserId() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('userId');
 }
 
 class PulseGym extends StatelessWidget {
-  const PulseGym({super.key});
+  final String? userId;
+
+  const PulseGym({super.key, this.userId});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
+      initialRoute: userId != null ? '/homepage' : '/login',  // Check if user is logged in
       routes: {
-        '/homepage': (context) => const HomePage(),
+        '/homepage': (context) => HomePage(userId: userId ?? ''),  // If null, pass an empty string or handle accordingly
         '/login': (context) => const Login(),
         '/subscription_page': (context) => const SubscriptionPage(),
         '/newpass': (context) => const Newpass(),
         '/register_page': (context) => const RegisterPage(),
         '/settings_page': (context) => const SettingsPage(),
-        '/exercises_page': (context) => const ExercisesPage(),
-        '/all_exercises': (context) => GymPage(),
-        '/profile': (context) => ProfilePage(),
+        '/exercises_page': (context) => ExercisesPage(userId: userId ?? ''),
+        '/all_exercises': (context) => GymPage(userId: userId ?? ''),
+        '/profile': (context) => ProfilePage(userId: userId ?? ''),
         '/editprofile': (context) => Editprofile(),
         '/nova_senha': (context) => NovaSenha(),
       },
