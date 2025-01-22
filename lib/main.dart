@@ -20,11 +20,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  
+
   // Retrieve userId from SharedPreferences
   final String? userId = await getUserId();
-      print('main: $userId'); // Debugging
-
   runApp(PulseGym(userId: userId));
 }
 
@@ -43,9 +41,10 @@ class PulseGym extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: userId != null ? '/homepage' : '/login',  // Check if user is logged in
+      initialRoute:
+          userId != null ? '/homepage' : '/login', // Check if user is logged in
       routes: {
-        '/homepage': (context) => HomePage(userId: userId ?? ''),  // If null, pass an empty string or handle accordingly
+        '/homepage': (context) => HomePage(userId: userId ?? ''),
         '/login': (context) => const Login(),
         '/subscription_page': (context) => const SubscriptionPage(),
         '/newpass': (context) => const Newpass(),

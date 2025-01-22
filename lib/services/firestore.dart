@@ -76,7 +76,8 @@ class FirestoreService {
   }
 
   // Method to add a workout card for a user (needs valid userId)
-  Future<void> addWorkoutCard(String userId, Map<String, dynamic> workoutCard) async {
+  Future<void> addWorkoutCard(
+      String userId, Map<String, dynamic> workoutCard) async {
     try {
       // Ensure userId is valid (not null or empty)
       if (userId.isEmpty) {
@@ -121,4 +122,43 @@ class FirestoreService {
       throw Exception('Failed to fetch workout cards');
     }
   }
+  Future<void> updateWorkoutCard(
+    String userId, String cardId, Map<String, dynamic> updatedData) async {
+  try {
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('workoutCards')
+        .doc(cardId)
+        .set(updatedData, SetOptions(merge: true));
+    print('Workout card updated successfully.');
+  } catch (e) {
+    print('Error updating workout card: $e');
+    throw Exception('Failed to update workout card.');
+  }
+}
+
+Future<Map<String, dynamic>?> getWorkoutCardByTitle(String userId, String title) async {
+  try {
+    QuerySnapshot snapshot = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('workoutCards')
+        .where('title', isEqualTo: title)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final doc = snapshot.docs.first;
+      return {
+        'id': doc.id, // Document ID
+        'data': doc.data(),
+      };
+    }
+    return null;
+  } catch (e) {
+    print('Error fetching workout card by title: $e');
+    return null;
+  }
+}
+
 }

@@ -4,7 +4,6 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
 import 'WorkoutDetailPage.dart';
 import 'settings_page.dart';
-import '../services/firestore.dart'; // For Firestore service
 
 class HomePage extends StatefulWidget {
   final String userId; // Pass the user ID when navigating to this page
@@ -26,7 +25,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     if (widget.userId.isEmpty) {
-      
       print('Error: User ID is empty!');
       // You could optionally navigate back or show a dialog here
       return; // Stop further execution if userId is invalid
@@ -336,8 +334,8 @@ class _HomePageState extends State<HomePage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: const ListTile(
         leading: CircleAvatar(
-          // backgroundImage: AssetImage('assets/trainer_image.png'),
-        ),
+            // backgroundImage: AssetImage('assets/trainer_image.png'),
+            ),
         title: Text("Trainer name"),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

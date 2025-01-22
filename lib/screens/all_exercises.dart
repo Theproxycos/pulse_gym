@@ -291,8 +291,8 @@ class _GymPageState extends State<GymPage> {
             ),
       bottomNavigationBar: CustomBottomNavBar(
         currentIndex: 3,
-        currentRoute: 'Exercises', 
-         userId: widget.userId,
+        currentRoute: 'Exercises',
+        userId: widget.userId,
       ),
     );
   }

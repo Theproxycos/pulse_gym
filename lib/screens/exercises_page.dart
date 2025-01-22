@@ -5,7 +5,8 @@ import '../widgets/custom_bottom_nav_bar.dart'; // Supondo que você tenha uma l
 class ExercisesPage extends StatefulWidget {
   final String userId; // Add userId parameter
 
-  const ExercisesPage({required this.userId, super.key}); // Make userId a required field
+  const ExercisesPage(
+      {required this.userId, super.key}); // Make userId a required field
 
   @override
   _ExercisesPageState createState() => _ExercisesPageState();
@@ -106,8 +107,8 @@ class _ExercisesPageState extends State<ExercisesPage> {
       ),
       bottomNavigationBar: CustomBottomNavBar(
         currentIndex: 3,
-        currentRoute: 'Exercises', 
-         userId: widget.userId,
+        currentRoute: 'Exercises',
+        userId: widget.userId,
       ),
     );
   }
