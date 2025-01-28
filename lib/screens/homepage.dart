@@ -20,28 +20,41 @@ class _HomePageState extends State<HomePage> {
   // Firestore instance and workout data
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> workoutData = []; // To store workout cards
+  String? _userName; // Variable to store the user's name
 
   @override
   void initState() {
     super.initState();
     if (widget.userId.isEmpty) {
       print('Error: User ID is empty!');
-      // You could optionally navigate back or show a dialog here
       return; // Stop further execution if userId is invalid
     }
+    _fetchUserName(); // Fetch the user's name from Firestore
     _fetchWorkoutCards(); // Fetch workout cards for the user
+  }
+
+  Future<void> _fetchUserName() async {
+    try {
+      final userDoc =
+          await _firestore.collection('users').doc(widget.userId).get();
+      if (userDoc.exists) {
+        setState(() {
+          _userName = userDoc['username']; // Assuming the field is 'username'
+        });
+      }
+    } catch (e) {
+      print('Error fetching user name: $e');
+    }
   }
 
   Future<void> _fetchWorkoutCards() async {
     try {
-      // Reference to the user's workoutCards subcollection
       final QuerySnapshot querySnapshot = await _firestore
           .collection('users')
           .doc(widget.userId)
           .collection('workoutCards')
           .get();
 
-      // Map Firestore documents to a list of workout card data
       setState(() {
         workoutData = querySnapshot.docs.map((doc) {
           return {
@@ -58,7 +71,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _addWorkoutCard(String title, String subtitle) async {
     try {
-      // Reference to the user's workoutCards subcollection
       await _firestore
           .collection('users')
           .doc(widget.userId)
@@ -67,8 +79,6 @@ class _HomePageState extends State<HomePage> {
         'title': title,
         'subtitle': subtitle,
       });
-
-      // Refresh the workout cards list
       _fetchWorkoutCards();
     } catch (e) {
       print('Error adding workout card: $e');
@@ -86,7 +96,6 @@ class _HomePageState extends State<HomePage> {
           children: [
             GestureDetector(
               onTap: () {
-                // Navigate to settings page
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => SettingsPage()),
@@ -94,14 +103,13 @@ class _HomePageState extends State<HomePage> {
               },
               child: CircleAvatar(
                 radius: 18,
-                // backgroundImage: AssetImage('assets/user_image.png'),
                 backgroundColor: Colors.grey[300],
               ),
             ),
             const SizedBox(width: 10),
-            const Text(
-              "Hi User!",
-              style: TextStyle(color: Colors.black),
+            Text(
+              _userName != null ? "Hello, $_userName!" : "Hello",
+              style: const TextStyle(color: Colors.black),
             ),
           ],
         ),
@@ -244,7 +252,6 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 if (titleController.text.isNotEmpty &&
                     subtitleController.text.isNotEmpty) {
-                  // Add workout card
                   _addWorkoutCard(
                     titleController.text,
                     subtitleController.text,
@@ -277,8 +284,8 @@ class _HomePageState extends State<HomePage> {
               scrollDirection: Axis.horizontal,
               children: workoutData.map((workout) {
                 return _buildMyWorkoutCard(
-                  title: workout['title']!,
-                  subtitle: workout['subtitle']!,
+                  title: workout['title']! as String,
+                  subtitle: workout['subtitle']! as String,
                   icon: Icons.fitness_center,
                 );
               }).toList(),
@@ -333,9 +340,7 @@ class _HomePageState extends State<HomePage> {
       color: Colors.blue[50],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: const ListTile(
-        leading: CircleAvatar(
-            // backgroundImage: AssetImage('assets/trainer_image.png'),
-            ),
+        leading: CircleAvatar(),
         title: Text("Trainer name"),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
