@@ -85,6 +85,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+        print("UserId no profile: ${widget.userId}");
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -121,7 +123,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
                     Navigator.pushNamed(context, '/editprofile',
-                        arguments: {'userId': widget.userId});
+                        arguments: {'userId': widget.userId}
+                        );
                   },
                 ),
               ),

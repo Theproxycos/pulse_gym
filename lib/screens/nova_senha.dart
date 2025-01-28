@@ -3,9 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/firestore.dart';
 
 class NovaSenha extends StatefulWidget {
-  final String userId;
-
-  NovaSenha({required this.userId});
+  // Remoção do parâmetro userId aqui, pois ele será recebido via argumentos
+  NovaSenha({Key? key}) : super(key: key);
 
   @override
   _NovaSenhaState createState() => _NovaSenhaState();
@@ -19,14 +18,23 @@ class _NovaSenhaState extends State<NovaSenha> {
   bool _confirmeSenhaVisivel = false;
   String? _senhaAtual;
 
+  late String userId;  // Variável para armazenar o userId
+
   @override
-  void initState() {
-    super.initState();
-    _loadCurrentPassword();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    
+    // Recupera o userId passado via argumentos
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null && args.containsKey('userId')) {
+      userId = args['userId'];
+      print("UserId recebido: $userId");
+      _loadCurrentPassword();  // Carrega a senha atual após pegar o userId
+    }
   }
 
   void _loadCurrentPassword() async {
-    final userData = await _firestoreService.getUserData(widget.userId);
+    final userData = await _firestoreService.getUserData(userId);
     if (userData != null) {
       setState(() {
         _senhaAtual = userData['password'] ?? '';
@@ -50,7 +58,7 @@ class _NovaSenhaState extends State<NovaSenha> {
     }
 
     // Atualizar a senha no Firestore
-    await _firestoreService.updateUserData(widget.userId, {
+    await _firestoreService.updateUserData(userId, {
       'password': novaSenha,
     });
 

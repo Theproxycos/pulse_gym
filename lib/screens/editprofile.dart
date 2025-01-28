@@ -3,9 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/firestore.dart';
 
 class EditProfile extends StatefulWidget {
-  final String userId;
-
-  EditProfile({required this.userId});
+  // Remoção do parâmetro userId aqui, pois ele será recebido via argumentos
+  EditProfile({Key? key}) : super(key: key);
 
   @override
   _EditProfileState createState() => _EditProfileState();
@@ -18,18 +17,23 @@ class _EditProfileState extends State<EditProfile> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
+  late String userId;  // Definindo a variável que irá armazenar o userId
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     
-    // Printando o userId para teste
-    print('User ID: ${widget.userId}');
-    
-    _loadUserData();
+    // Agora, o código que recupera o userId está em didChangeDependencies
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    if (args != null && args.containsKey('userId')) {
+      userId = args['userId'];
+      print("UserId recebido: $userId");
+      _loadUserData();  // Carregar os dados do usuário após pegar o userId
+    }
   }
 
   void _loadUserData() async {
-    final userData = await _firestoreService.getUserData(widget.userId);
+    final userData = await _firestoreService.getUserData(userId);
     if (userData != null) {
       setState(() {
         _usernameController.text = userData['username'] ?? '';
@@ -41,7 +45,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   void _saveChanges() async {
-    await _firestoreService.updateUserData(widget.userId, {
+    await _firestoreService.updateUserData(userId, {
       'username': _usernameController.text,
       'email': _emailController.text,
       'phone_number': _phoneController.text,
@@ -55,6 +59,8 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    print("UserId na build: $userId");
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Profile'),
@@ -77,15 +83,29 @@ class _EditProfileState extends State<EditProfile> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Edit Profile', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text('Edit Profile',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               SizedBox(height: 20),
-              TextField(controller: _usernameController, decoration: InputDecoration(labelText: 'Username', border: OutlineInputBorder())),
+              TextField(
+                  controller: _usernameController,
+                  decoration: InputDecoration(
+                      labelText: 'Username', border: OutlineInputBorder())),
               SizedBox(height: 20),
-              TextField(controller: _emailController, decoration: InputDecoration(labelText: 'Email', border: OutlineInputBorder())),
+              TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                      labelText: 'Email', border: OutlineInputBorder())),
               SizedBox(height: 20),
-              TextField(controller: _phoneController, keyboardType: TextInputType.phone, decoration: InputDecoration(labelText: 'Phone Number', border: OutlineInputBorder())),
+              TextField(
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(
+                      labelText: 'Phone Number', border: OutlineInputBorder())),
               SizedBox(height: 20),
-              TextField(controller: _addressController, decoration: InputDecoration(labelText: 'Address', border: OutlineInputBorder())),
+              TextField(
+                  controller: _addressController,
+                  decoration: InputDecoration(
+                      labelText: 'Address', border: OutlineInputBorder())),
               SizedBox(height: 30),
               Center(
                 child: OutlinedButton(
@@ -93,9 +113,14 @@ class _EditProfileState extends State<EditProfile> {
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     side: BorderSide(color: Colors.orange, width: 2),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                   ),
-                  child: Text('Save', style: TextStyle(fontSize: 16, color: Colors.orange, fontWeight: FontWeight.bold)),
+                  child: Text('Save',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.orange,
+                          fontWeight: FontWeight.bold)),
                 ),
               ),
             ],

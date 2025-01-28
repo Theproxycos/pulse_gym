@@ -18,6 +18,8 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+        print("UserId navbar $userId");
+
     return Container(
       height: 60,
       decoration: const BoxDecoration(
