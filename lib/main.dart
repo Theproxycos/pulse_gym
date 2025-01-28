@@ -53,8 +53,8 @@ class PulseGym extends StatelessWidget {
         '/exercises_page': (context) => ExercisesPage(userId: userId ?? ''),
         '/all_exercises': (context) => GymPage(userId: userId ?? ''),
         '/profile': (context) => ProfilePage(userId: userId ?? ''),
-        '/editprofile': (context) => Editprofile(),
-        '/nova_senha': (context) => NovaSenha(),
+        '/editprofile': (context) => EditProfile(userId: userId ?? ''),
+        '/nova_senha': (context) => NovaSenha(userId: userId ?? ''),
       },
     );
   }

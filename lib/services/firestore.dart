@@ -2,6 +2,32 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+// Método para buscar os dados do usuário pelo ID
+  Future<Map<String, dynamic>?> getUserData(String userId) async {
+    try {
+      DocumentSnapshot doc =
+          await _firestore.collection('users').doc(userId).get();
+      if (doc.exists) {
+        return doc.data() as Map<String, dynamic>;
+      }
+      return null;
+    } catch (e) {
+      print('Erro ao buscar dados do usuário: $e');
+      return null;
+    }
+  }
+
+  // Método para atualizar os dados do usuário
+  Future<void> updateUserData(
+      String userId, Map<String, dynamic> updatedData) async {
+    try {
+      await _firestore.collection('users').doc(userId).update(updatedData);
+      print('Dados do usuário atualizados com sucesso.');
+    } catch (e) {
+      print('Erro ao atualizar os dados do usuário: $e');
+      throw Exception('Falha ao atualizar os dados.');
+    }
+  }
 
   // Check if a username exists
   Future<bool> doesUsernameExist(String username) async {
@@ -122,43 +148,44 @@ class FirestoreService {
       throw Exception('Failed to fetch workout cards');
     }
   }
+
   Future<void> updateWorkoutCard(
-    String userId, String cardId, Map<String, dynamic> updatedData) async {
-  try {
-    await _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('workoutCards')
-        .doc(cardId)
-        .set(updatedData, SetOptions(merge: true));
-    print('Workout card updated successfully.');
-  } catch (e) {
-    print('Error updating workout card: $e');
-    throw Exception('Failed to update workout card.');
-  }
-}
-
-Future<Map<String, dynamic>?> getWorkoutCardByTitle(String userId, String title) async {
-  try {
-    QuerySnapshot snapshot = await _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('workoutCards')
-        .where('title', isEqualTo: title)
-        .get();
-
-    if (snapshot.docs.isNotEmpty) {
-      final doc = snapshot.docs.first;
-      return {
-        'id': doc.id, // Document ID
-        'data': doc.data(),
-      };
+      String userId, String cardId, Map<String, dynamic> updatedData) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('workoutCards')
+          .doc(cardId)
+          .set(updatedData, SetOptions(merge: true));
+      print('Workout card updated successfully.');
+    } catch (e) {
+      print('Error updating workout card: $e');
+      throw Exception('Failed to update workout card.');
     }
-    return null;
-  } catch (e) {
-    print('Error fetching workout card by title: $e');
-    return null;
   }
-}
 
+  Future<Map<String, dynamic>?> getWorkoutCardByTitle(
+      String userId, String title) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('workoutCards')
+          .where('title', isEqualTo: title)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final doc = snapshot.docs.first;
+        return {
+          'id': doc.id, // Document ID
+          'data': doc.data(),
+        };
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching workout card by title: $e');
+      return null;
+    }
+  }
 }

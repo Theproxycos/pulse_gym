@@ -1,13 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../services/firestore.dart';
 
 class NovaSenha extends StatefulWidget {
+  final String userId;
+
+  NovaSenha({required this.userId});
+
   @override
   _NovaSenhaState createState() => _NovaSenhaState();
 }
 
 class _NovaSenhaState extends State<NovaSenha> {
+  final FirestoreService _firestoreService = FirestoreService();
+  final TextEditingController _novaSenhaController = TextEditingController();
+  final TextEditingController _confirmeSenhaController = TextEditingController();
   bool _novaSenhaVisivel = false;
   bool _confirmeSenhaVisivel = false;
+  String? _senhaAtual;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCurrentPassword();
+  }
+
+  void _loadCurrentPassword() async {
+    final userData = await _firestoreService.getUserData(widget.userId);
+    if (userData != null) {
+      setState(() {
+        _senhaAtual = userData['password'] ?? '';
+      });
+      print('Senha atual: $_senhaAtual'); // Para depuração
+    }
+  }
+
+  void _updatePassword() async {
+    String novaSenha = _novaSenhaController.text;
+    String confirmeSenha = _confirmeSenhaController.text;
+
+    if (novaSenha.isEmpty || confirmeSenha.isEmpty) {
+      _showMessage('Os campos de senha não podem estar vazios.');
+      return;
+    }
+
+    if (novaSenha != confirmeSenha) {
+      _showMessage('As senhas não coincidem.');
+      return;
+    }
+
+    // Atualizar a senha no Firestore
+    await _firestoreService.updateUserData(widget.userId, {
+      'password': novaSenha,
+    });
+
+    _showMessage('Senha alterada com sucesso!', isSuccess: true);
+  }
+
+  void _showMessage(String message, {bool isSuccess = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isSuccess ? Colors.green : Colors.red,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +93,7 @@ class _NovaSenhaState extends State<NovaSenha> {
             const Text('New Password'),
             const SizedBox(height: 8),
             TextField(
+              controller: _novaSenhaController,
               obscureText: !_novaSenhaVisivel,
               decoration: InputDecoration(
                 hintText: 'New Password',
@@ -57,6 +115,7 @@ class _NovaSenhaState extends State<NovaSenha> {
             const Text('Confirm New Password'),
             const SizedBox(height: 8),
             TextField(
+              controller: _confirmeSenhaController,
               obscureText: !_confirmeSenhaVisivel,
               decoration: InputDecoration(
                 hintText: 'Confirm New Password',
@@ -80,13 +139,10 @@ class _NovaSenhaState extends State<NovaSenha> {
             Center(
               child: Column(
                 children: [
-                  // Botão Trocar com estilo atualizado
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: () {
-                        // Adicione sua lógica de atualização de senha aqui
-                      },
+                      onPressed: _updatePassword,
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: Colors.orange),
                         shape: RoundedRectangleBorder(
@@ -105,7 +161,6 @@ class _NovaSenhaState extends State<NovaSenha> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // Botão Cancelar
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
