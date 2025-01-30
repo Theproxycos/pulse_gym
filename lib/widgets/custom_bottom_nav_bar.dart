@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../screens/activity_page.dart';
 import '../screens/all_exercises.dart';
 import '../screens/homepage.dart';
-import '../screens/exercises_page.dart';
 import '../screens/profile.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
