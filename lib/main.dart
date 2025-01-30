@@ -45,10 +45,10 @@ class PulseGym extends StatelessWidget {
       routes: {
         '/homepage': (context) => HomePage(userId: userId ?? ''),
         '/login': (context) => const Login(),
-        '/subscription_page': (context) => const SubscriptionPage(),
+        '/subscription_page': (context) => SubscriptionPage(userId: userId ?? ''),
         '/newpass': (context) => const Newpass(),
         '/register_page': (context) => const RegisterPage(),
-        '/settings_page': (context) => const SettingsPage(),
+        '/settings_page': (context) => SettingsPage(userId: userId ?? ''),
         '/exercises_page': (context) => ExercisesPage(userId: userId ?? ''),
         '/all_exercises': (context) => GymPage(userId: userId ?? ''),
         '/profile': (context) => ProfilePage(userId: userId ?? ''),

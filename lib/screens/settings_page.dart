@@ -3,7 +3,9 @@ import '../screens/subscription_page.dart';
 import 'login.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  final String userId; // Add userId parameter
+
+  const SettingsPage({super.key, required this.userId}); // Receive userId in constructor
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,9 @@ class SettingsPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SubscriptionPage()),
+                  MaterialPageRoute(
+                    builder: (context) => SubscriptionPage(userId: userId), // Pass the userId to SubscriptionPage
+                  ),
                 );
               },
             ),

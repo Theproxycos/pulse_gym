@@ -203,4 +203,17 @@ class FirestoreService {
       return null;
     }
   }
+
+// Update the user's selected plan
+  Future<void> updateUserPlan(String userId, String plan) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'plan': plan, // Update the plan field
+      });
+      print('User plan updated successfully.');
+    } catch (e) {
+      print('Error updating user plan: $e');
+      throw Exception('Failed to update plan.');
+    }
+  }
 }

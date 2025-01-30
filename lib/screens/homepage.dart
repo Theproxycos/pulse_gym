@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                  MaterialPageRoute(builder: (context) => SettingsPage(userId: widget.userId,)),
                 );
               },
               child: CircleAvatar(
