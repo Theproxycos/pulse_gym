@@ -4,6 +4,7 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
 import 'WorkoutDetailPage.dart';
 import 'settings_page.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   final String userId; // Pass the user ID when navigating to this page
@@ -16,6 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   DateTime today = DateTime.now();
   DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
 
   // Firestore instance and workout data
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -175,6 +177,10 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 20),
               _buildSectionTitle("Your Personal Trainer"),
               _buildTrainerCard(),
+              const SizedBox(height: 20),
+              _buildSectionTitle("Your Nutritionist"),
+              _buildNutritionistCard(), // Exibe o card do nutricionista
+              const SizedBox(height: 10),
             ],
           ),
         ),
@@ -347,6 +353,67 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text("Contact: trainer@example.com"),
             Text("Specialization: Personal Trainer"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNutritionistCard() {
+    return Card(
+      color: Colors.green[50],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: ListTile(
+        leading: GestureDetector(
+          onTap: () async {
+            // Abre o seletor de data
+            DateTime today = DateTime.now();
+            DateTime? selectedDate = await showDatePicker(
+              context: context,
+              initialDate: today, // Define a data inicial como o dia de hoje
+              firstDate:
+                  today, // Define o primeiro dia selecionável como o dia de hoje
+              lastDate: DateTime(2101), // Data limite para seleção
+            );
+
+            if (selectedDate != null) {
+              // Após a data ser escolhida, abre o seletor de hora
+              TimeOfDay? selectedTime = await showTimePicker(
+                context: context,
+                initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+              );
+
+              if (selectedTime != null) {
+                // Atualiza o estado com a data e hora selecionadas
+                setState(() {
+                  _selectedDate = selectedDate;
+                  _selectedTime = selectedTime;
+                });
+              }
+            }
+          },
+          child: const Icon(Icons.calendar_month, color: Colors.green),
+        ),
+        title: const Text("Your Nutritionist"),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Contact: nutritionist@example.com"),
+            const Text("Specialization: Diet & Nutrition"),
+            SizedBox(height: 10),
+            // Exibe a data e hora selecionadas
+            _selectedDate != null && _selectedTime != null
+                ? Text(
+                    'Appointment: ${_selectedDate!.day}-${_selectedDate!.month}-${_selectedDate!.year} ${DateFormat('HH:mm').format(DateTime(
+                      _selectedDate!.year,
+                      _selectedDate!.month,
+                      _selectedDate!.day,
+                      _selectedTime!.hour,
+                      _selectedTime!.minute,
+                    ))}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
+                : const Text('No appointment set'),
           ],
         ),
       ),
