@@ -51,22 +51,24 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
     setState(() {
       weightData = [];
       weightDates = [];
-      int index = 0;
+      Map<double, String> xToDate = {}; // Store x-position -> Date mapping
+      double xValue =
+          0.0; // Start from 0 and increment to ensure unique positions
+
       for (var doc in logs.docs) {
         double weightValue = (doc['weight'] as num).toDouble();
         DateTime date = (doc['date'] as Timestamp).toDate();
-        weightData.add(FlSpot(index.toDouble(), weightValue));
-        weightDates.add(DateFormat("dd MMM").format(date));
-        index++;
+        String formattedDate = DateFormat("dd MMM").format(date);
+
+        // Store the date for each x-value
+        xToDate[xValue] = formattedDate;
+
+        weightData.add(FlSpot(xValue, weightValue));
+        xValue += 1.0; // Increment x value for the next data point
       }
-      // Preprocess weightDates to ensure uniqueness
-      List<String> uniqueWeightDates = [];
-      for (int i = 0; i < weightDates.length; i++) {
-        if (i == 0 || weightDates[i] != weightDates[i - 1]) {
-          uniqueWeightDates.add(weightDates[i]);
-        }
-      }
-      weightDates = uniqueWeightDates;
+
+      weightDates =
+          xToDate.values.toList(); // Ensure labels align with X values
     });
   }
 
@@ -109,7 +111,7 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                           titlesData: FlTitlesData(
                             leftTitles: AxisTitles(
                               sideTitles: SideTitles(
-                                showTitles: true,
+                                showTitles: true, // Keep the left axis
                                 reservedSize: 40,
                                 getTitlesWidget: (value, meta) {
                                   return Text(
@@ -123,29 +125,33 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                             bottomTitles: AxisTitles(
                               sideTitles: SideTitles(
                                 showTitles: true,
+                                reservedSize: 22,
                                 getTitlesWidget: (value, meta) {
-                                  int index = value.toInt();
-                                  if (index >= 0 &&
-                                      index < weightDates.length) {
-                                    // Only show unique dates
-                                    if (index == 0 ||
-                                        (index > 0 &&
-                                            weightDates[index] !=
-                                                weightDates[index - 1])) {
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 8.0),
-                                        child: Text(
-                                          weightDates[index],
-                                          style: TextStyle(
-                                              color: Colors.grey, fontSize: 12),
-                                        ),
-                                      );
-                                    }
+                                  if (weightDates
+                                      .asMap()
+                                      .containsKey(value.toInt())) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        weightDates[value
+                                            .toInt()], // Ensure correct date
+                                        style: TextStyle(
+                                            color: Colors.grey, fontSize: 12),
+                                      ),
+                                    );
                                   }
-                                  return const SizedBox.shrink();
+                                  return const SizedBox
+                                      .shrink(); // Hide incorrect labels
                                 },
                               ),
+                            ),
+                            rightTitles: const AxisTitles(
+                              sideTitles: SideTitles(
+                                  showTitles: false), // Hide right labels
+                            ),
+                            topTitles: const AxisTitles(
+                              sideTitles: SideTitles(
+                                  showTitles: false), // Hide top labels
                             ),
                           ),
                           gridData: FlGridData(
@@ -166,7 +172,7 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                             LineChartBarData(
                               spots: weightData,
                               isCurved: false,
-                              color: Colors.blue,
+                              color: Colors.orange,
                               barWidth: 2,
                               belowBarData: BarAreaData(show: false),
                               dotData: FlDotData(
@@ -184,12 +190,12 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                           ],
                         ),
                       ))
-                  : Center(child: Text("No weight data available")),
+                  : const Center(child: Text("No weight data available")),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _showAddMeasurementDialog(),
-              child: Text("Add Measurement"),
+              child: const Text("Add Measurement"),
             )
           ],
         ),
