@@ -83,6 +83,28 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
   Widget build(BuildContext context) {
     double? bmi = _calculateBMI();
 
+    // Determine the minimum and maximum Y values based on the data
+    double minY, maxY;
+    if (weightData.isNotEmpty) {
+      if (weightData.length == 1) {
+        // Single data point: center it in the graph
+        double weightValue = weightData.first.y;
+        minY = weightValue - 10; // 10kg gap below
+        maxY = weightValue + 10; // 10kg gap above
+      } else {
+        // Multiple data points: calculate based on the data
+        double minWeight =
+            weightData.map((spot) => spot.y).reduce((a, b) => a < b ? a : b);
+        double maxWeight =
+            weightData.map((spot) => spot.y).reduce((a, b) => a > b ? a : b);
+        minY = minWeight - 10;
+        maxY = maxWeight + 10;
+      }
+    } else {
+      minY = 0;
+      maxY = 100;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -111,14 +133,19 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                           titlesData: FlTitlesData(
                             leftTitles: AxisTitles(
                               sideTitles: SideTitles(
-                                showTitles: true, // Keep the left axis
+                                showTitles: true,
                                 reservedSize: 40,
                                 getTitlesWidget: (value, meta) {
-                                  return Text(
-                                    value.toStringAsFixed(0),
-                                    style: TextStyle(
-                                        color: Colors.grey, fontSize: 12),
-                                  );
+                                  // Display titles only for multiples of 5
+                                  if (value % 5 == 0) {
+                                    return Text(
+                                      value.toStringAsFixed(0),
+                                      style: TextStyle(
+                                          color: Colors.grey, fontSize: 12),
+                                    );
+                                  }
+                                  return const SizedBox
+                                      .shrink(); // Hide titles for other values
                                 },
                               ),
                             ),
@@ -127,37 +154,34 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                                 showTitles: true,
                                 reservedSize: 22,
                                 getTitlesWidget: (value, meta) {
-                                  if (weightDates
-                                      .asMap()
-                                      .containsKey(value.toInt())) {
+                                  // Display correct date for each x value
+                                  int index = value.toInt();
+                                  if (index >= 0 &&
+                                      index < weightDates.length) {
                                     return Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
                                       child: Text(
-                                        weightDates[value
-                                            .toInt()], // Ensure correct date
+                                        weightDates[index], // Map index to date
                                         style: TextStyle(
                                             color: Colors.grey, fontSize: 12),
                                       ),
                                     );
                                   }
                                   return const SizedBox
-                                      .shrink(); // Hide incorrect labels
+                                      .shrink(); // Hide for invalid x values
                                 },
                               ),
                             ),
                             rightTitles: const AxisTitles(
-                              sideTitles: SideTitles(
-                                  showTitles: false), // Hide right labels
-                            ),
+                                sideTitles: SideTitles(showTitles: false)),
                             topTitles: const AxisTitles(
-                              sideTitles: SideTitles(
-                                  showTitles: false), // Hide top labels
-                            ),
+                                sideTitles: SideTitles(showTitles: false)),
                           ),
                           gridData: FlGridData(
                             show: true,
                             drawVerticalLine: false,
-                            horizontalInterval: 2,
+                            horizontalInterval:
+                                5, // Interval of 5 on the horizontal grid
                             getDrawingHorizontalLine: (value) => FlLine(
                               color: Colors.grey.shade800,
                               strokeWidth: 0.5,
@@ -188,20 +212,30 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                               ),
                             ),
                           ],
+                          minY: minY,
+                          maxY: maxY,
                         ),
-                      ))
+                      ),
+                    )
                   : const Center(child: Text("No weight data available")),
             ),
             const SizedBox(height: 20),
+           
             ElevatedButton(
               onPressed: () => _showAddMeasurementDialog(),
-              child: const Text("Add Measurement"),
-            )
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+              ),
+              child: const Text(
+                'Add Measurement',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
           ],
         ),
       ),
       bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: 1, // Update based on your navigation index
+        currentIndex: 1,
         currentRoute: 'BodyMeasurements',
         userId: widget.userId,
       ),
@@ -232,7 +266,7 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
           ),
           actions: [
             TextButton(
-                onPressed: () => Navigator.pop(context), child: Text("Cancel")),
+                onPressed: () => Navigator.pop(context), child: Text("Cancel", style: TextStyle(color: Colors.black))),
             ElevatedButton(
               onPressed: () {
                 double? newWeight = double.tryParse(weightController.text);
@@ -242,7 +276,7 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                 }
                 Navigator.pop(context);
               },
-              child: Text("Save"),
+              child: Text("Save", style: TextStyle(color: Colors.orange)),
             )
           ],
         );

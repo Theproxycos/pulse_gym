@@ -231,19 +231,19 @@ class _GymPageState extends State<GymPage> {
                             applyFilters();
                           });
                         },
-                        child: Text("All"),
+                        child: Text("All", style: TextStyle(color: Colors.orange)),
                       ),
                       SizedBox(width: 10),
                       // Filtro de grupos musculares
                       ElevatedButton(
                         onPressed: showBodyPartsFilter,
-                        child: Text("Muscle Parts"),
+                        child: Text("Muscle Parts",style: TextStyle(color: Colors.orange)),
                       ),
                       SizedBox(width: 10),
                       // Filtro de equipamentos
                       ElevatedButton(
                         onPressed: showEquipmentFilter,
-                        child: Text("Equipments"),
+                        child: Text("Equipments",style: TextStyle(color: Colors.orange)),
                       ),
                     ],
                   ),

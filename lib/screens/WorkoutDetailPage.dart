@@ -199,7 +199,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                             ),
                           ),
                           trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.orange),
+                            icon:
+                                const Icon(Icons.delete, color: Colors.orange),
                             onPressed: () => _removeExercise(index),
                           ),
                           onTap: () {
@@ -234,12 +235,16 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                   _addExercise(newExercise);
                 }
               },
-              icon: const Icon(Icons.add),
-              label: const Text('Add Exercise'),
+              icon: const Icon(Icons.add, color: Colors.white,),
+              label: const Text(
+                'Add Exercise',
+                style: TextStyle(color: Colors.white),
+              ),
               style: ElevatedButton.styleFrom(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 textStyle: const TextStyle(fontSize: 16),
+                backgroundColor: Colors.orange,
               ),
             ),
           ],
