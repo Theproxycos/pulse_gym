@@ -39,7 +39,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
       if (workoutCard != null) {
         setState(() {
           workoutCardId = workoutCard['id'];
-          exercises = List<dynamic>.from(workoutCard['data']['exercises'] ?? []);
+          exercises =
+              List<dynamic>.from(workoutCard['data']['exercises'] ?? []);
         });
       }
     } catch (e) {
@@ -87,12 +88,61 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
     await _saveExercisesToFirestore();
   }
 
+  void _deleteWorkoutCard() async {
+  if (workoutCardId == null) return;
+
+  try {
+    await _firestoreService.deleteWorkoutCard(widget.userId, workoutCardId!);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Workout deleted successfully!')),
+    );
+
+    Navigator.pop(context, true); // Send 'true' back to the previous screen
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to delete workout: $e')),
+    );
+  }
+}
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         backgroundColor: Colors.brown,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete, color: Colors.red),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Delete Workout'),
+                  content: const Text(
+                      'Are you sure you want to delete this workout?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        _deleteWorkoutCard();
+                      },
+                      child: const Text('Delete',
+                          style: TextStyle(color: Colors.red)),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -189,7 +239,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
               icon: const Icon(Icons.add),
               label: const Text('Add Exercise'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 textStyle: const TextStyle(fontSize: 16),
               ),
             ),
@@ -203,7 +254,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
 class ExerciseDetailPage extends StatelessWidget {
   final dynamic exercise;
 
-  const ExerciseDetailPage({required this.exercise, Key? key}) : super(key: key);
+  const ExerciseDetailPage({required this.exercise, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

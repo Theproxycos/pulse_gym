@@ -300,46 +300,50 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildMyWorkoutCard({
-    required String title,
-    required String subtitle,
-    required IconData icon,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => WorkoutDetailPage(
-              title: title,
-              subtitle: subtitle,
-              userId: widget.userId,
-            ),
+  required String title,
+  required String subtitle,
+  required IconData icon,
+}) {
+  return GestureDetector(
+    onTap: () async {
+      final bool? shouldRefresh = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WorkoutDetailPage(
+            title: title,
+            subtitle: subtitle,
+            userId: widget.userId,
           ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(right: 16.0),
-        child: Card(
-          elevation: 2,
-          color: const Color(0xff3371FF),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(icon, color: Colors.orange, size: 40),
-                const SizedBox(height: 10),
-                Text(title, style: const TextStyle(color: Colors.white)),
-                Text(subtitle, style: const TextStyle(color: Colors.grey)),
-              ],
-            ),
+        ),
+      );
+
+      if (shouldRefresh == true) {
+        _fetchWorkoutCards(); // Refresh the homepage list when a workout is deleted
+      }
+    },
+    child: Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: Card(
+        elevation: 2,
+        color: const Color(0xff3371FF),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, color: Colors.orange, size: 40),
+              const SizedBox(height: 10),
+              Text(title, style: const TextStyle(color: Colors.white)),
+              Text(subtitle, style: const TextStyle(color: Colors.grey)),
+            ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildTrainerCard() {
     return Card(

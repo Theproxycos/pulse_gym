@@ -165,6 +165,21 @@ class FirestoreService {
     }
   }
 
+  Future<void> deleteWorkoutCard(String userId, String cardId) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('workoutCards')
+          .doc(cardId)
+          .delete();
+      print('Workout card deleted successfully.');
+    } catch (e) {
+      print('Error deleting workout card: $e');
+      throw Exception('Failed to delete workout card.');
+    }
+  }
+
   Future<Map<String, dynamic>?> getWorkoutCardByTitle(
       String userId, String title) async {
     try {
