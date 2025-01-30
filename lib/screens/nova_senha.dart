@@ -13,23 +13,25 @@ class NovaSenha extends StatefulWidget {
 class _NovaSenhaState extends State<NovaSenha> {
   final FirestoreService _firestoreService = FirestoreService();
   final TextEditingController _novaSenhaController = TextEditingController();
-  final TextEditingController _confirmeSenhaController = TextEditingController();
+  final TextEditingController _confirmeSenhaController =
+      TextEditingController();
   bool _novaSenhaVisivel = false;
   bool _confirmeSenhaVisivel = false;
   String? _senhaAtual;
 
-  late String userId;  // Variável para armazenar o userId
+  late String userId; // Variável para armazenar o userId
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    
+
     // Recupera o userId passado via argumentos
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     if (args != null && args.containsKey('userId')) {
       userId = args['userId'];
       print("UserId recebido: $userId");
-      _loadCurrentPassword();  // Carrega a senha atual após pegar o userId
+      _loadCurrentPassword(); // Carrega a senha atual após pegar o userId
     }
   }
 
@@ -78,7 +80,8 @@ class _NovaSenhaState extends State<NovaSenha> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Change Password'),
+        title: const Text('Change Password',
+            style: TextStyle(color: Colors.orange)),
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(

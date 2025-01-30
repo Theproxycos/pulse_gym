@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../screens/activity_page.dart';
 import '../screens/all_exercises.dart';
 import '../screens/homepage.dart';
 import '../screens/exercises_page.dart';
@@ -42,13 +43,13 @@ class CustomBottomNavBar extends StatelessWidget {
             index: 0,
             targetPage: HomePage(userId: userId), // Pass the userId here
           ),
-          // _buildNavItem(
-          //   context: context,
-          //   icon: Icons.fitness_center,
-          //   label: "Activity",
-          //   index: 1,
-          //   targetPage: const ActivityPage(userId: userId),
-          // ),
+          _buildNavItem(
+            context: context,
+            icon: Icons.fitness_center,
+            label: "Activity",
+            index: 1,
+            targetPage: BodyMeasurementsPage(userId: userId),
+          ),
           // _buildNavItem(
           //   context: context,
           //   icon: Icons.euro,

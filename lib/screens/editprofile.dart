@@ -63,7 +63,7 @@ class _EditProfileState extends State<EditProfile> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: const Text('Edit Profile', style: TextStyle(color: Colors.orange)),
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(

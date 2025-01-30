@@ -89,34 +89,32 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
   }
 
   void _deleteWorkoutCard() async {
-  if (workoutCardId == null) return;
+    if (workoutCardId == null) return;
 
-  try {
-    await _firestoreService.deleteWorkoutCard(widget.userId, workoutCardId!);
+    try {
+      await _firestoreService.deleteWorkoutCard(widget.userId, workoutCardId!);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Workout deleted successfully!')),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Workout deleted successfully!')),
+      );
 
-    Navigator.pop(context, true); // Send 'true' back to the previous screen
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Failed to delete workout: $e')),
-    );
+      Navigator.pop(context, true); // Send 'true' back to the previous screen
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete workout: $e')),
+      );
+    }
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        backgroundColor: Colors.brown,
+        backgroundColor: Colors.orange,
         actions: [
           IconButton(
-            icon: const Icon(Icons.delete, color: Colors.red),
+            icon: const Icon(Icons.delete, color: Colors.white),
             onPressed: () {
               showDialog(
                 context: context,
@@ -135,7 +133,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                         _deleteWorkoutCard();
                       },
                       child: const Text('Delete',
-                          style: TextStyle(color: Colors.red)),
+                          style: TextStyle(color: Colors.orange)),
                     ),
                   ],
                 ),
@@ -201,7 +199,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                             ),
                           ),
                           trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
+                            icon: const Icon(Icons.delete, color: Colors.orange),
                             onPressed: () => _removeExercise(index),
                           ),
                           onTap: () {

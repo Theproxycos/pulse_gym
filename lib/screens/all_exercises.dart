@@ -192,7 +192,10 @@ class _GymPageState extends State<GymPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Gym Exercises"),
+        title: const Text(
+          "Gym Exercises",
+          style: TextStyle(color: Colors.orange),
+        ),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
