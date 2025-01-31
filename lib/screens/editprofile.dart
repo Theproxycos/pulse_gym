@@ -51,9 +51,9 @@ class _EditProfileState extends State<EditProfile> {
       'address': _addressController.text,
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Perfil atualizado com sucesso!')),
-    );
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   SnackBar(content: Text('Perfil atualizado com sucesso!')),
+    // );
   }
 
   @override

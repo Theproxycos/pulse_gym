@@ -71,9 +71,9 @@ class _LoginFormState extends State<LoginForm> {
         // Login successful
         String userId = snapshot.docs.first.id; // Get the userId (document ID)
         // print('loginpage: $userId'); // Debugging
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login successful!')),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(content: Text('Login successful!')),
+        // );
 
         // Save userId to SharedPreferences
         final prefs = await SharedPreferences.getInstance();
