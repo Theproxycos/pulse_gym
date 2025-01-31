@@ -117,6 +117,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       // Navigator.push(...);
     } catch (e) {
       print("Error updating user plan: $e");
+      print(widget.userId);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Failed to select plan")),
       );

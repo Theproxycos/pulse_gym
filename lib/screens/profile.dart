@@ -84,10 +84,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile',style: TextStyle(color: Colors.orange)),
+        title: const Text('Profile', style: TextStyle(color: Colors.orange)),
       ),
       body: Container(
         color: Colors.white,
@@ -121,8 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
                     Navigator.pushNamed(context, '/editprofile',
-                        arguments: {'userId': widget.userId}
-                        );
+                        arguments: {'userId': widget.userId});
                   },
                 ),
               ),
@@ -139,18 +137,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                 ),
               ),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.language,
-                      size: 40, color: Colors.orange),
-                  title: const Text('Change Language'),
-                  trailing:
-                      const Icon(Icons.arrow_forward_ios, color: Colors.grey),
-                  onTap: () {
-                    // Navegar para a página de idiomas
-                  },
-                ),
-              ),
+              // Card(
+              //   child: ListTile(
+              //     leading: const Icon(Icons.language,
+              //         size: 40, color: Colors.orange),
+              //     title: const Text('Change Language'),
+              //     trailing:
+              //         const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+              //     onTap: () {
+              //       // Navegar para a página de idiomas
+              //     },
+              //   ),
+              // ),
               Card(
                 child: ListTile(
                   leading: const Icon(Icons.currency_exchange,
@@ -159,7 +157,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   trailing:
                       const Icon(Icons.arrow_forward_ios, color: Colors.grey),
                   onTap: () {
-                    Navigator.pushNamed(context, '/subscription_page');
+                    Navigator.pushNamed(context, '/subscription_page',
+                        arguments: {'userId': widget.userId});
                   },
                 ),
               ),

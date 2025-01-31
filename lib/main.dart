@@ -39,13 +39,25 @@ class PulseGym extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: (settings) {
+        if (settings.name == '/subscription_page') {
+          final args = settings.arguments as Map<String, dynamic>;
+          final userId = args['userId'];
+
+          return MaterialPageRoute(
+            builder: (context) => SubscriptionPage(userId: userId),
+          );
+        }
+        return null;
+      },
       debugShowCheckedModeBanner: false,
       initialRoute:
           userId != null ? '/homepage' : '/login', // Check if user is logged in
       routes: {
         '/homepage': (context) => HomePage(userId: userId ?? ''),
         '/login': (context) => const Login(),
-        '/subscription_page': (context) => SubscriptionPage(userId: userId ?? ''),
+        '/subscription_page': (context) =>
+            SubscriptionPage(userId: userId ?? ''),
         '/newpass': (context) => const Newpass(),
         '/register_page': (context) => const RegisterPage(),
         '/settings_page': (context) => SettingsPage(userId: userId ?? ''),
