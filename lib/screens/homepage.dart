@@ -534,7 +534,7 @@ class _HomePageState extends State<HomePage> {
                   double.infinity, 80), // Set constant height for button (50)
             ),
             child: const Text(
-              "Purchase a Subscription plan to gain access to a personal trainer",
+              "Purchase a subscription plan to gain access to a personal trainer",
               style: TextStyle(
                 color: Colors.white, // Text color inside button
                 fontSize: 16,
@@ -631,7 +631,7 @@ class _HomePageState extends State<HomePage> {
                   double.infinity, 80), // Set constant height for button (50)
             ),
             child: const Text(
-              "Purchase a Subscription plan to gain access to nutritionist",
+              "Purchase a subscription plan to gain access to a nutritionist",
               style: TextStyle(
                 color: Colors.white, // Text color inside button
                 fontSize: 16,
