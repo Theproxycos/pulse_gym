@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'plan_description.dart';
-
 class SubscriptionPage extends StatefulWidget {
   final String userId; // Pass the user ID when navigating to this page
 
@@ -153,7 +151,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               title: "Plan One",
               price: "20€",
               index: 0,
-              description: "Description for Plan One",
+              description:
+                  "Unlock custom creation further than 6 exercises and unlock features.",
             ),
             const SizedBox(height: 10),
             _buildPlanCard(
@@ -161,7 +160,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               title: "Plan Two",
               price: "30€",
               index: 1,
-              description: "Description for Plan Two",
+              description:
+                  "Access personalized training features and additional services.",
             ),
             const SizedBox(height: 10),
             _buildPlanCard(
@@ -169,7 +169,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               title: "Plan Three",
               price: "40€",
               index: 2,
-              description: "Description for Plan Three",
+              description:
+                  "Full access to training and nutrition plans. All features unlocked.",
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -265,17 +266,53 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     color: Colors.black,
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PlanDescriptionPage(
-                          planTitle: title,
-                          planDescription: description,
-                        ),
-                      ),
+                    // Show a custom dialog when the info icon is pressed
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(10), // Rounded corners
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisSize:
+                                  MainAxisSize.min, // Size based on content
+                              children: [
+                                Text(
+                                  title, // Plan title passed here
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  description, // Plan description passed here
+                                  style: const TextStyle(fontSize: 16),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 20),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                  child: const Text(
+                                    'Close',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
-                ),
+                )
             ],
           ),
         ),
