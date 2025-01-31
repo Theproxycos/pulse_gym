@@ -7,7 +7,7 @@ import 'settings_page.dart';
 import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
-  final String userId; // Pass the user ID when navigating to this page
+  final String userId;
   const HomePage({super.key, required this.userId});
 
   @override
@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   DateTime today = DateTime.now();
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
+  int selectedWeekday = DateTime.now().weekday;
 
   // Firestore instance and workout data
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -56,6 +57,7 @@ class _HomePageState extends State<HomePage> {
           .collection('users')
           .doc(widget.userId)
           .collection('workoutCards')
+          .where('weekday', isEqualTo: selectedWeekday)
           .get();
 
       setState(() {
@@ -64,6 +66,7 @@ class _HomePageState extends State<HomePage> {
             'id': doc.id,
             'title': doc['title'],
             'subtitle': doc['subtitle'],
+            'weekday': doc['weekday'],
           };
         }).toList();
       });
@@ -72,7 +75,8 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _addWorkoutCard(String title, String subtitle) async {
+  Future<void> _addWorkoutCard(
+      String title, String subtitle, int weekday) async {
     try {
       await _firestore
           .collection('users')
@@ -81,6 +85,7 @@ class _HomePageState extends State<HomePage> {
           .add({
         'title': title,
         'subtitle': subtitle,
+        'weekday': weekday,
       });
       _fetchWorkoutCards();
     } catch (e) {
@@ -185,7 +190,10 @@ class _HomePageState extends State<HomePage> {
               onDateChange: (selectedDate) {
                 setState(() {
                   _selectedDate = selectedDate;
+                  selectedWeekday =
+                      selectedDate.weekday; // Atualiza o dia da semana
                 });
+                _fetchWorkoutCards(); // Recarrega os workouts
               },
               headerProps: const EasyHeaderProps(
                 monthPickerType: MonthPickerType.switcher,
@@ -278,47 +286,66 @@ class _HomePageState extends State<HomePage> {
   void _showAddWorkoutDialog() {
     final TextEditingController titleController = TextEditingController();
     final TextEditingController subtitleController = TextEditingController();
+    int selectedDay = DateTime.now().weekday;
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Add New Workout"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: "Workout Title"),
+        return StatefulBuilder(
+          // Isso permite atualizar o estado do Dialog
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text("Add New Workout"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: titleController,
+                    decoration:
+                        const InputDecoration(labelText: "Workout Title"),
+                  ),
+                  TextField(
+                    controller: subtitleController,
+                    decoration:
+                        const InputDecoration(labelText: "Workout Subtitle"),
+                  ),
+                  DropdownButton<int>(
+                    value: selectedDay,
+                    items: List.generate(7, (index) {
+                      return DropdownMenuItem(
+                        value: index + 1,
+                        child: Text(DateFormat('EEEE')
+                            .format(DateTime(2024, 1, index + 1))),
+                      );
+                    }),
+                    onChanged: (value) {
+                      setDialogState(() {
+                        // Atualiza o estado do Dialog
+                        selectedDay = value!;
+                      });
+                    },
+                  ),
+                ],
               ),
-              TextField(
-                controller: subtitleController,
-                decoration:
-                    const InputDecoration(labelText: "Workout Subtitle"),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                if (titleController.text.isNotEmpty &&
-                    subtitleController.text.isNotEmpty) {
-                  _addWorkoutCard(
-                    titleController.text,
-                    subtitleController.text,
-                  );
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text("Add"),
-            ),
-          ],
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (titleController.text.isNotEmpty &&
+                        subtitleController.text.isNotEmpty) {
+                      _addWorkoutCard(titleController.text,
+                          subtitleController.text, selectedDay);
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: const Text("Add"),
+                ),
+              ],
+            );
+          },
         );
       },
     );
