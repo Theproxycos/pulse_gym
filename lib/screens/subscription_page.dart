@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'plan_description.dart';
+
 class SubscriptionPage extends StatefulWidget {
   final String userId; // Pass the user ID when navigating to this page
 
@@ -14,15 +16,48 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String? _userName; // To store the user's name
   int? selectedPlanIndex; // To track the selected plan
+  int? currentPlanIndex; // Índice do plano já comprado
 
   @override
   void initState() {
     super.initState();
     if (widget.userId.isEmpty) {
       print('Error: User ID is empty!');
-      return; // Stop further execution if userId is invalid
+      return;
     }
-    _fetchUserName(); // Fetch the user's name from Firestore
+    _fetchUserName();
+    _fetchUserPlan();
+  }
+
+  // Buscar o plano atual do usuário
+  Future<void> _fetchUserPlan() async {
+    try {
+      final userDoc =
+          await _firestore.collection('users').doc(widget.userId).get();
+      if (userDoc.exists && userDoc.data()!.containsKey('subscription_plan')) {
+        String currentPlan = userDoc['subscription_plan'];
+
+        setState(() {
+          currentPlanIndex = _getPlanIndex(currentPlan);
+        });
+      }
+    } catch (e) {
+      print('Error fetching user plan: $e');
+    }
+  }
+
+// Converter nome do plano salvo no Firestore para um índice correspondente
+  int? _getPlanIndex(String plan) {
+    switch (plan) {
+      case "Plan One":
+        return 0;
+      case "Plan Two":
+        return 1;
+      case "Plan Three":
+        return 2;
+      default:
+        return null;
+    }
   }
 
   Future<void> _fetchUserName() async {
@@ -41,6 +76,14 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
   // This method updates the user's selected plan in Firestore
   Future<void> _updateUserPlan() async {
+    if (selectedPlanIndex == null) {
+      // Se nenhum plano foi selecionado
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a plan to proceed")),
+      );
+      return;
+    }
+
     String selectedPlan;
     switch (selectedPlanIndex) {
       case 0:
@@ -57,14 +100,23 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     }
 
     try {
+      // Atualizando no Firestore o plano selecionado
       await _firestore.collection('users').doc(widget.userId).update({
-        'subscription_plan': selectedPlan, // Update the subscription plan field
+        'subscription_plan': selectedPlan, // Atualizando o campo do plano
       });
 
-      // After updating, you can navigate to the payment page or show a success message
+      // Atualizando o estado local para refletir o plano comprado
+      setState(() {
+        currentPlanIndex = selectedPlanIndex;
+      });
+
+      // Exibindo uma mensagem de sucesso
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Plan selected successfully")),
       );
+
+      // Aqui você pode navegar para a próxima página (página de pagamento, por exemplo)
+      // Navigator.push(...);
     } catch (e) {
       print("Error updating user plan: $e");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -79,7 +131,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text(_userName != null ? "Hello, $_userName!" : "Subscription Plan"),
+        title: Text(
+            _userName != null ? "Hello, $_userName!" : "Subscription Plan"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -122,13 +175,12 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             ElevatedButton(
               onPressed: selectedPlanIndex != null
                   ? () {
-                      _updateUserPlan(); // Update plan in Firestore
+                      _updateUserPlan(); // Atualizar plano no Firestore
                     }
                   : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: selectedPlanIndex != null
-                    ? Colors.blue
-                    : Colors.grey,
+                backgroundColor:
+                    selectedPlanIndex != null ? Colors.blue : Colors.grey,
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -155,6 +207,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     required String description,
   }) {
     final isSelected = selectedPlanIndex == index;
+    final isCurrentPlan =
+        currentPlanIndex == index; // Verifica se é o plano comprado
 
     return GestureDetector(
       onTap: () {
@@ -167,6 +221,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
+          side: isCurrentPlan // Adiciona borda ao plano comprado
+              ? BorderSide(color: Colors.blue, width: 3)
+              : BorderSide.none,
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
@@ -181,7 +238,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: isSelected ? Colors.black : Colors.white,
+                      color: isSelected || isCurrentPlan
+                          ? Colors.black
+                          : Colors
+                              .white, // Texto escuro para selecionado ou comprado
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -190,7 +250,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: isSelected ? Colors.black : Colors.white,
+                      color: isSelected || isCurrentPlan
+                          ? Colors.black
+                          : Colors
+                              .white, // Preço em preto quando selecionado ou comprado
                     ),
                   ),
                 ],
@@ -216,31 +279,6 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-// Sample PlanDescriptionPage to show more details of a plan.
-class PlanDescriptionPage extends StatelessWidget {
-  final String planTitle;
-  final String planDescription;
-
-  const PlanDescriptionPage({
-    super.key,
-    required this.planTitle,
-    required this.planDescription,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(planTitle),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(planDescription),
       ),
     );
   }
