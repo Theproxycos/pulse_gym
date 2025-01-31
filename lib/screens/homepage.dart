@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   DateTime today = DateTime.now();
   DateTime? _selectedDate;
+  DateTime? _selectedAppointmentDate;
   TimeOfDay? _selectedTime;
   int selectedWeekday = DateTime.now().weekday;
 
@@ -131,7 +132,7 @@ class _HomePageState extends State<HomePage> {
         var time = TimeOfDay(
             hour: appointment?['hour'], minute: appointment?['minute']);
         setState(() {
-          _selectedDate = date;
+          _selectedAppointmentDate = date;
           _selectedTime = time;
         });
       }
@@ -165,10 +166,22 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(width: 10),
-            Text(
-              _userName != null ? "Hello, $_userName!" : "Hello",
-              style: const TextStyle(color: Colors.black),
-            ),
+            Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(
+                    text: "Hello, ",
+                    style: TextStyle(color: Colors.orange), // "Hello" in orange
+                  ),
+                  if (_userName != null)
+                    TextSpan(
+                      text: _userName!,
+                      style:
+                          const TextStyle(color: Colors.black), // Username in black
+                    ),
+                ],
+              ),
+            )
           ],
         ),
         actions: [
@@ -276,7 +289,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.add, color: Colors.blue),
+          icon: const Icon(Icons.add, color: Colors.orange),
           onPressed: onPressed,
         ),
       ],
@@ -330,7 +343,8 @@ class _HomePageState extends State<HomePage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text("Cancel"),
+                  child: const Text("Cancel",
+                      style: TextStyle(color: Colors.black)),
                 ),
                 TextButton(
                   onPressed: () {
@@ -341,7 +355,8 @@ class _HomePageState extends State<HomePage> {
                       Navigator.of(context).pop();
                     }
                   },
-                  child: const Text("Add"),
+                  child:
+                      const Text("Add", style: TextStyle(color: Colors.orange)),
                 ),
               ],
             );
@@ -427,13 +442,18 @@ class _HomePageState extends State<HomePage> {
     return Card(
       color: Colors.blue[50],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: const ListTile(
-        leading: CircleAvatar(),
-        title: Text("Trainer name"),
-        subtitle: Column(
+      child: ListTile(
+        // leading: CircleAvatar(),
+        leading: GestureDetector(
+          onTap: () async {},
+          child: const Icon(Icons.calendar_month,
+              color: Color.fromARGB(255, 15, 8, 215)),
+        ),
+        title: const Text("Trainer name"),
+        subtitle: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Contact: trainer@example.com"),
+            Text("Contact: trainer@pulsegym.com"),
             Text("Specialization: Personal Trainer"),
           ],
         ),
@@ -468,7 +488,7 @@ class _HomePageState extends State<HomePage> {
               if (selectedTime != null) {
                 // Atualiza o estado com a data e hora selecionadas
                 setState(() {
-                  _selectedDate = selectedDate;
+                  _selectedAppointmentDate = selectedDate;
                   _selectedTime = selectedTime;
                 });
                 // Salvar no Firestore
@@ -482,16 +502,16 @@ class _HomePageState extends State<HomePage> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Contact: nutritionist@example.com"),
+            const Text("Contact: nutritionist@pulsegym.com"),
             const Text("Specialization: Diet & Nutrition"),
             SizedBox(height: 10),
             // Exibe a data e hora selecionadas
-            _selectedDate != null && _selectedTime != null
+            _selectedAppointmentDate != null && _selectedTime != null
                 ? Text(
-                    'Appointment: ${_selectedDate!.day}-${_selectedDate!.month}-${_selectedDate!.year} ${DateFormat('HH:mm').format(DateTime(
-                      _selectedDate!.year,
-                      _selectedDate!.month,
-                      _selectedDate!.day,
+                    'Appointment: ${_selectedAppointmentDate!.day}-${_selectedAppointmentDate!.month}-${_selectedAppointmentDate!.year} ${DateFormat('HH:mm').format(DateTime(
+                      _selectedAppointmentDate!.year,
+                      _selectedAppointmentDate!.month,
+                      _selectedAppointmentDate!.day,
                       _selectedTime!.hour,
                       _selectedTime!.minute,
                     ))}',

@@ -70,7 +70,7 @@ class _LoginFormState extends State<LoginForm> {
       if (snapshot.docs.isNotEmpty) {
         // Login successful
         String userId = snapshot.docs.first.id; // Get the userId (document ID)
-        print('loginpage: $userId'); // Debugging
+        // print('loginpage: $userId'); // Debugging
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login successful!')),
         );

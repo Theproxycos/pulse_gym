@@ -18,7 +18,6 @@ class CustomBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        print("UserId navbar $userId");
 
     return Container(
       height: 60,
@@ -44,7 +43,7 @@ class CustomBottomNavBar extends StatelessWidget {
           ),
           _buildNavItem(
             context: context,
-            icon: Icons.fitness_center,
+            icon: Icons.alarm_on,
             label: "Activity",
             index: 1,
             targetPage: BodyMeasurementsPage(userId: userId),

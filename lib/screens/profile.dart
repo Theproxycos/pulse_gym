@@ -84,7 +84,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-        print("UserId no profile: ${widget.userId}");
 
     return Scaffold(
       appBar: AppBar(
