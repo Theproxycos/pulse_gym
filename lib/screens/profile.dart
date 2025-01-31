@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import '../services/firestore.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
+import 'login.dart';
 
 class ProfilePage extends StatefulWidget {
   final String userId;
@@ -159,6 +160,21 @@ class _ProfilePageState extends State<ProfilePage> {
                   onTap: () {
                     Navigator.pushNamed(context, '/subscription_page',
                         arguments: {'userId': widget.userId});
+                  },
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  leading: const Icon(Icons.logout,
+                      size: 40, color: Colors.orange),
+                  title: const Text('Log Out'),
+                  trailing:
+                      const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Login()),
+                    );
                   },
                 ),
               ),
