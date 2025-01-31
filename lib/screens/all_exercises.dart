@@ -28,7 +28,7 @@ class _GymPageState extends State<GymPage> {
   String searchQuery = "";
 
   final String apiKey =
-      'a5f6544e3bmsh3eb01b7e96b3e2ap13bb85jsn989013367bbe'; // Substitua pela sua chave de API.
+      'e2689f5456msh990d721271ebd3fp1eeea5jsnf6fd0cb1e8e9'; // Substitua pela sua chave de API.
   final String apiHost = 'exercisedb.p.rapidapi.com';
 
   @override
@@ -87,7 +87,7 @@ class _GymPageState extends State<GymPage> {
   Future<void> fetchExercises() async {
     try {
       final response = await http.get(
-        Uri.parse('https://$apiHost/exercises?limit=400&offset=0'),
+        Uri.parse('https://$apiHost/exercises?limit=200 &offset=0'),
         headers: {
           'X-RapidAPI-Key': apiKey,
           'X-RapidAPI-Host': apiHost,
@@ -231,19 +231,22 @@ class _GymPageState extends State<GymPage> {
                             applyFilters();
                           });
                         },
-                        child: Text("All", style: TextStyle(color: Colors.orange)),
+                        child:
+                            Text("All", style: TextStyle(color: Colors.orange)),
                       ),
                       SizedBox(width: 10),
                       // Filtro de grupos musculares
                       ElevatedButton(
                         onPressed: showBodyPartsFilter,
-                        child: Text("Muscle Parts",style: TextStyle(color: Colors.orange)),
+                        child: Text("Muscle Parts",
+                            style: TextStyle(color: Colors.orange)),
                       ),
                       SizedBox(width: 10),
                       // Filtro de equipamentos
                       ElevatedButton(
                         onPressed: showEquipmentFilter,
-                        child: Text("Equipments",style: TextStyle(color: Colors.orange)),
+                        child: Text("Equipments",
+                            style: TextStyle(color: Colors.orange)),
                       ),
                     ],
                   ),
