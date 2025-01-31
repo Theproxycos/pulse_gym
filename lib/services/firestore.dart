@@ -40,6 +40,21 @@ class FirestoreService {
     }
   }
 
+  Future<Map<String, dynamic>?> getUserById(String userId) async {
+    try {
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      if (userDoc.exists) {
+        return userDoc.data();
+      } else {
+        print('User not found');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching user: $e');
+      return null;
+    }
+  }
+
   // Método para atualizar os dados do usuário
   Future<void> updateUserData(
       String userId, Map<String, dynamic> updatedData) async {

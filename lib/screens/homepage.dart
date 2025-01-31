@@ -6,6 +6,8 @@ import 'WorkoutDetailPage.dart';
 import 'settings_page.dart';
 import 'package:intl/intl.dart';
 
+import 'subscription_page.dart';
+
 class HomePage extends StatefulWidget {
   final String userId;
   const HomePage({super.key, required this.userId});
@@ -23,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   DateTime? _selectedTrainerAppointmentDate;
   TimeOfDay? _selectedTrainerTime;
   int selectedWeekday = DateTime.now().weekday;
+  String? _userTier; // Add this line to store the user's tier.
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> workoutData = [];
@@ -39,6 +42,22 @@ class _HomePageState extends State<HomePage> {
     _fetchWorkoutCards(); // Fetch workout cards for the user
     _fetchAppointment(); // Fetch the appointment
     _fetchTrainerAppointment();
+    _fetchUserTier(); // Fetch the user tier
+  }
+
+  Future<void> _fetchUserTier() async {
+    try {
+      final userDoc =
+          await _firestore.collection('users').doc(widget.userId).get();
+      if (userDoc.exists) {
+        setState(() {
+          _userTier = userDoc[
+              'subscription_plan']; // Assuming tier is stored as a field 'tier'
+        });
+      }
+    } catch (e) {
+      print('Error fetching user tier: $e');
+    }
   }
 
   Future<void> _fetchUserName() async {
@@ -197,10 +216,17 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SettingsPage(
-                            userId: widget.userId,
-                          )),
-                );
+                    builder: (context) => SettingsPage(
+                      userId: widget.userId,
+                    ),
+                  ),
+                ).then((_) {
+                  _fetchUserName(); // Refresh user name
+                  _fetchWorkoutCards(); // Refresh workout cards
+                  _fetchAppointment(); // Refresh appointments
+                  _fetchTrainerAppointment(); // Refresh trainer appointments
+                  _fetchUserTier(); // Refresh user tier
+                });
               },
               child: CircleAvatar(
                 radius: 18,
@@ -481,6 +507,45 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildTrainerCard() {
+    if (_userTier == 'Plan One') {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.only(
+              top: 20.0), // Add space on top of the button
+          child: ElevatedButton(
+            onPressed: () {
+              // Navigate to the subscription page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SubscriptionPage(
+                    userId: widget.userId,
+                  ), // Replace with your SubscriptionPage widget
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange, // Button color
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8), // Rounded corners
+              ),
+              minimumSize: Size(
+                  double.infinity, 80), // Set constant height for button (50)
+            ),
+            child: const Text(
+              "Purchase a Subscription plan to gain access to a personal trainer",
+              style: TextStyle(
+                color: Colors.white, // Text color inside button
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    }
+
     return Card(
       color: Colors.blue[50],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -539,36 +604,70 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildNutritionistCard() {
+    if (_userTier == 'Plan One' || _userTier == 'Plan Two') {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.only(
+              top: 20.0), // Add space on top of the button
+          child: ElevatedButton(
+            onPressed: () {
+              // Navigate to the subscription page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SubscriptionPage(
+                    userId: widget.userId,
+                  ), // Replace with your SubscriptionPage widget
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange, // Button color
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8), // Rounded corners
+              ),
+              minimumSize: Size(
+                  double.infinity, 80), // Set constant height for button (50)
+            ),
+            child: const Text(
+              "Purchase a Subscription plan to gain access to nutritionist",
+              style: TextStyle(
+                color: Colors.white, // Text color inside button
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    }
+
     return Card(
       color: Colors.green[50],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
         leading: GestureDetector(
           onTap: () async {
-            // Abre o seletor de data
             DateTime today = DateTime.now();
             DateTime? selectedDate = await showDatePicker(
               context: context,
-              initialDate: today, // Define a data inicial como o dia de hoje
-              firstDate:
-                  today, // Define o primeiro dia selecionável como o dia de hoje
-              lastDate: DateTime(2101), // Data limite para seleção
+              initialDate: today,
+              firstDate: today,
+              lastDate: DateTime(2101),
             );
 
             if (selectedDate != null) {
-              // Após a data ser escolhida, abre o seletor de hora
               TimeOfDay? selectedTime = await showTimePicker(
                 context: context,
                 initialTime: TimeOfDay.fromDateTime(DateTime.now()),
               );
 
               if (selectedTime != null) {
-                // Atualiza o estado com a data e hora selecionadas
                 setState(() {
                   _selectedAppointmentDate = selectedDate;
                   _selectedTime = selectedTime;
                 });
-                // Salvar no Firestore
                 _saveAppointment(selectedDate, selectedTime);
               }
             }
@@ -582,7 +681,6 @@ class _HomePageState extends State<HomePage> {
             const Text("Contact: nutritionist@pulsegym.com"),
             const Text("Specialization: Diet & Nutrition"),
             SizedBox(height: 10),
-            // Exibe a data e hora selecionadas
             _selectedAppointmentDate != null && _selectedTime != null
                 ? Text(
                     'Appointment: ${_selectedAppointmentDate!.day}-${_selectedAppointmentDate!.month}-${_selectedAppointmentDate!.year} ${DateFormat('HH:mm').format(DateTime(

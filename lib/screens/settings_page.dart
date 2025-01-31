@@ -5,13 +5,14 @@ import 'login.dart';
 class SettingsPage extends StatelessWidget {
   final String userId; // Add userId parameter
 
-  const SettingsPage({super.key, required this.userId}); // Receive userId in constructor
+  const SettingsPage(
+      {super.key, required this.userId}); // Receive userId in constructor
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings',style: TextStyle(color: Colors.orange)),
+        title: const Text('Settings', style: TextStyle(color: Colors.orange)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -21,24 +22,29 @@ class SettingsPage extends StatelessWidget {
             _buildButton(
               context,
               label: 'Subscription Plan',
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SubscriptionPage(userId: userId), // Pass the userId to SubscriptionPage
+                    builder: (context) => SubscriptionPage(
+                        userId: userId), // Pass the userId to SubscriptionPage
                   ),
+                      
                 );
+                if (result != null) {
+                       
+}
               },
             ),
 
-            // Seção de Idioma
-            _buildButton(
-              context,
-              label: 'Language',
-              onPressed: () {
-                // Ação para alterar o idioma
-              },
-            ),
+            // // Seção de Idioma
+            // _buildButton(
+            //   context,
+            //   label: 'Language',
+            //   onPressed: () {
+            //     // Ação para alterar o idioma
+            //   },
+            // ),
 
             // Seção de Tema
             _buildButton(
