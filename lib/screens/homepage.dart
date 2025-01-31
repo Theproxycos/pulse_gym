@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
     }
     _fetchUserName(); // Fetch the user's name from Firestore
     _fetchWorkoutCards(); // Fetch workout cards for the user
+    _fetchAppointment(); // Fetch the appointment
   }
 
   Future<void> _fetchUserName() async {
@@ -87,6 +88,53 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+// Alteração do método para salvar na subcoleção 'appointments'
+  Future<void> _saveAppointment(DateTime date, TimeOfDay time) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(widget.userId)
+          .collection('appointments') // Subcoleção de appointments
+          .doc(
+              'nutritionist') // Aqui pode ser um identificador único ou um nome fixo
+          .set(
+              {
+            'date': date.toIso8601String(),
+            'hour': time.hour,
+            'minute': time.minute,
+          },
+              SetOptions(
+                  merge: true)); // Merge para não sobrescrever dados existentes
+    } catch (e) {
+      print('Error saving appointment: $e');
+    }
+  }
+
+  // Alteração do método para buscar da subcoleção 'appointments'
+  Future<void> _fetchAppointment() async {
+    try {
+      final appointmentDoc = await _firestore
+          .collection('users')
+          .doc(widget.userId)
+          .collection('appointments') // Subcoleção de appointments
+          .doc('nutritionist') // O identificador fixo, ou pode ser dinâmico
+          .get();
+
+      if (appointmentDoc.exists) {
+        var appointment = appointmentDoc.data();
+        var date = DateTime.parse(appointment?['date']);
+        var time = TimeOfDay(
+            hour: appointment?['hour'], minute: appointment?['minute']);
+        setState(() {
+          _selectedDate = date;
+          _selectedTime = time;
+        });
+      }
+    } catch (e) {
+      print('Error fetching appointment: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,7 +148,10 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SettingsPage(userId: widget.userId,)),
+                  MaterialPageRoute(
+                      builder: (context) => SettingsPage(
+                            userId: widget.userId,
+                          )),
                 );
               },
               child: CircleAvatar(
@@ -300,50 +351,50 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildMyWorkoutCard({
-  required String title,
-  required String subtitle,
-  required IconData icon,
-}) {
-  return GestureDetector(
-    onTap: () async {
-      final bool? shouldRefresh = await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => WorkoutDetailPage(
-            title: title,
-            subtitle: subtitle,
-            userId: widget.userId,
+    required String title,
+    required String subtitle,
+    required IconData icon,
+  }) {
+    return GestureDetector(
+      onTap: () async {
+        final bool? shouldRefresh = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WorkoutDetailPage(
+              title: title,
+              subtitle: subtitle,
+              userId: widget.userId,
+            ),
           ),
-        ),
-      );
+        );
 
-      if (shouldRefresh == true) {
-        _fetchWorkoutCards(); // Refresh the homepage list when a workout is deleted
-      }
-    },
-    child: Padding(
-      padding: const EdgeInsets.only(right: 16.0),
-      child: Card(
-        elevation: 2,
-        color: const Color(0xff3371FF),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(icon, color: Colors.orange, size: 40),
-              const SizedBox(height: 10),
-              Text(title, style: const TextStyle(color: Colors.white)),
-              Text(subtitle, style: const TextStyle(color: Colors.grey)),
-            ],
+        if (shouldRefresh == true) {
+          _fetchWorkoutCards(); // Refresh the homepage list when a workout is deleted
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(right: 16.0),
+        child: Card(
+          elevation: 2,
+          color: const Color(0xff3371FF),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(icon, color: Colors.orange, size: 40),
+                const SizedBox(height: 10),
+                Text(title, style: const TextStyle(color: Colors.white)),
+                Text(subtitle, style: const TextStyle(color: Colors.grey)),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildTrainerCard() {
     return Card(
@@ -393,6 +444,8 @@ class _HomePageState extends State<HomePage> {
                   _selectedDate = selectedDate;
                   _selectedTime = selectedTime;
                 });
+                // Salvar no Firestore
+                _saveAppointment(selectedDate, selectedTime);
               }
             }
           },

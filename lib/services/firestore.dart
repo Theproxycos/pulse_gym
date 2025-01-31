@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-// Método para buscar os dados do usuário pelo ID
+
+  // Método para buscar os dados do usuário pelo ID
   Future<Map<String, dynamic>?> getUserData(String userId) async {
     try {
       DocumentSnapshot doc =
@@ -14,6 +15,28 @@ class FirestoreService {
     } catch (e) {
       print('Erro ao buscar dados do usuário: $e');
       return null;
+    }
+  }
+
+  // Método para adicionar um agendamento na subcoleção 'appointments' do usuário
+  Future<void> addAppointment(
+      String userId, Map<String, dynamic> appointmentData) async {
+    try {
+      // Referência para o documento do usuário
+      DocumentReference userDocRef = _firestore.collection('users').doc(userId);
+
+      // Adicionar o agendamento na subcoleção 'appointments' do usuário
+      await userDocRef.collection('appointments').add({
+        'date': appointmentData['date'],
+        'time': appointmentData['time'],
+        'nutritionist': appointmentData['nutritionist'],
+        'created_at': FieldValue.serverTimestamp(),
+      });
+
+      print('Appointment added successfully');
+    } catch (e) {
+      print('Error adding appointment: $e');
+      throw Exception('Failed to add appointment');
     }
   }
 
@@ -204,7 +227,7 @@ class FirestoreService {
     }
   }
 
-// Update the user's selected plan
+  // Update the user's selected plan
   Future<void> updateUserPlan(String userId, String plan) async {
     try {
       await _firestore.collection('users').doc(userId).update({
