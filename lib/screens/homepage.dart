@@ -16,15 +16,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DateTime today = DateTime.now();
+  // ignore: unused_field
   DateTime? _selectedDate;
   DateTime? _selectedAppointmentDate;
   TimeOfDay? _selectedTime;
+  DateTime? _selectedTrainerAppointmentDate;
+  TimeOfDay? _selectedTrainerTime;
   int selectedWeekday = DateTime.now().weekday;
 
-  // Firestore instance and workout data
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<Map<String, dynamic>> workoutData = []; // To store workout cards
-  String? _userName; // Variable to store the user's name
+  List<Map<String, dynamic>> workoutData = [];
+  String? _userName;
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _HomePageState extends State<HomePage> {
     _fetchUserName(); // Fetch the user's name from Firestore
     _fetchWorkoutCards(); // Fetch workout cards for the user
     _fetchAppointment(); // Fetch the appointment
+    _fetchTrainerAppointment();
   }
 
   Future<void> _fetchUserName() async {
@@ -94,7 +97,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-// Alteração do método para salvar na subcoleção 'appointments'
   Future<void> _saveAppointment(DateTime date, TimeOfDay time) async {
     try {
       await _firestore
@@ -116,7 +118,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // Alteração do método para buscar da subcoleção 'appointments'
   Future<void> _fetchAppointment() async {
     try {
       final appointmentDoc = await _firestore
@@ -138,6 +139,47 @@ class _HomePageState extends State<HomePage> {
       }
     } catch (e) {
       print('Error fetching appointment: $e');
+    }
+  }
+
+  Future<void> _saveTrainerAppointment(DateTime date, TimeOfDay time) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(widget.userId)
+          .collection('appointments')
+          .doc('trainer')
+          .set({
+        'date': date.toIso8601String(),
+        'hour': time.hour,
+        'minute': time.minute,
+      }, SetOptions(merge: true));
+    } catch (e) {
+      print('Error saving trainer appointment: $e');
+    }
+  }
+
+  Future<void> _fetchTrainerAppointment() async {
+    try {
+      final trainerAppointmentDoc = await _firestore
+          .collection('users')
+          .doc(widget.userId)
+          .collection('appointments')
+          .doc('trainer')
+          .get();
+
+      if (trainerAppointmentDoc.exists) {
+        var appointment = trainerAppointmentDoc.data();
+        var date = DateTime.parse(appointment?['date']);
+        var time = TimeOfDay(
+            hour: appointment?['hour'], minute: appointment?['minute']);
+        setState(() {
+          _selectedTrainerAppointmentDate = date;
+          _selectedTrainerTime = time;
+        });
+      }
+    } catch (e) {
+      print('Error fetching trainer appointment: $e');
     }
   }
 
@@ -177,7 +219,7 @@ class _HomePageState extends State<HomePage> {
                     TextSpan(
                       text: _userName!,
                       style:
-                          const TextStyle(color: Colors.black), // Username in black
+                          TextStyle(color: Colors.black), // Username in black
                     ),
                 ],
               ),
@@ -443,18 +485,53 @@ class _HomePageState extends State<HomePage> {
       color: Colors.blue[50],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
-        // leading: CircleAvatar(),
         leading: GestureDetector(
-          onTap: () async {},
-          child: const Icon(Icons.calendar_month,
-              color: Color.fromARGB(255, 15, 8, 215)),
+          onTap: () async {
+            DateTime today = DateTime.now();
+            DateTime? selectedDate = await showDatePicker(
+              context: context,
+              initialDate: today,
+              firstDate: today,
+              lastDate: DateTime(2101),
+            );
+
+            if (selectedDate != null) {
+              TimeOfDay? selectedTime = await showTimePicker(
+                context: context,
+                initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+              );
+
+              if (selectedTime != null) {
+                setState(() {
+                  _selectedTrainerAppointmentDate = selectedDate;
+                  _selectedTrainerTime = selectedTime;
+                });
+                _saveTrainerAppointment(selectedDate, selectedTime);
+              }
+            }
+          },
+          child: const Icon(Icons.calendar_month, color: Colors.blue),
         ),
-        title: const Text("Trainer name"),
-        subtitle: const Column(
+        title: const Text("Your Personal Trainer"),
+        subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Contact: trainer@pulsegym.com"),
-            Text("Specialization: Personal Trainer"),
+            const Text("Contact: trainer@pulsegym.com"),
+            const Text("Specialization: Personal Trainer"),
+            SizedBox(height: 10),
+            _selectedTrainerAppointmentDate != null &&
+                    _selectedTrainerTime != null
+                ? Text(
+                    'Appointment: ${_selectedTrainerAppointmentDate!.day}-${_selectedTrainerAppointmentDate!.month}-${_selectedTrainerAppointmentDate!.year} ${DateFormat('HH:mm').format(DateTime(
+                      _selectedTrainerAppointmentDate!.year,
+                      _selectedTrainerAppointmentDate!.month,
+                      _selectedTrainerAppointmentDate!.day,
+                      _selectedTrainerTime!.hour,
+                      _selectedTrainerTime!.minute,
+                    ))}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
+                : const Text('No appointment set'),
           ],
         ),
       ),
