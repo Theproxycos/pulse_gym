@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="pulse_gym"
+        android:label="Pulse Gym"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

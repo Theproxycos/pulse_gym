@@ -5,6 +5,7 @@ import 'dart:io';
 import '../services/firestore.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
 import 'login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   final String userId;
@@ -165,15 +166,20 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               Card(
                 child: ListTile(
-                  leading: const Icon(Icons.logout,
-                      size: 40, color: Colors.orange),
+                  leading:
+                      const Icon(Icons.logout, size: 40, color: Colors.orange),
                   title: const Text('Log Out'),
                   trailing:
                       const Icon(Icons.arrow_forward_ios, color: Colors.grey),
-                  onTap: () {
-                    Navigator.push(
+                  onTap: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.clear(); // Remove a sessão do utilizador
+
+                    // Redireciona para a tela de login e remove o histórico de navegação
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => Login()),
+                      (Route<dynamic> route) => false,
                     );
                   },
                 ),

@@ -29,11 +29,8 @@ class SettingsPage extends StatelessWidget {
                     builder: (context) => SubscriptionPage(
                         userId: userId), // Pass the userId to SubscriptionPage
                   ),
-                      
                 );
-                if (result != null) {
-                       
-}
+                if (result != null) {}
               },
             ),
 
@@ -145,16 +142,6 @@ class SettingsPage extends StatelessWidget {
                   },
                 ),
               ],
-            ),
-            _buildButton(
-              context,
-              label: 'Logout',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
-              },
             ),
           ],
         ),
