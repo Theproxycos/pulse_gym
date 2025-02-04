@@ -370,7 +370,12 @@ class ExerciseDetailPage extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            Text(exercise['description'] ?? "No description available."),
+            Text(
+              (exercise['instructions'] != null &&
+                      exercise['instructions'] is List)
+                  ? (exercise['instructions'] as List).join("\n\n")
+                  : "No instructions available.",
+            ),
           ],
         ),
       ),
