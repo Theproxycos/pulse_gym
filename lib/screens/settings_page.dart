@@ -3,10 +3,9 @@ import '../screens/subscription_page.dart';
 import 'login.dart';
 
 class SettingsPage extends StatelessWidget {
-  final String userId; // Add userId parameter
+  final String userId; // Parâmetro userId
 
-  const SettingsPage(
-      {super.key, required this.userId}); // Receive userId in constructor
+  const SettingsPage({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,6 @@ class SettingsPage extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            // Seção de Descrição do Plano
             _buildButton(
               context,
               label: 'Subscription Plan',
@@ -26,103 +24,59 @@ class SettingsPage extends StatelessWidget {
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SubscriptionPage(
-                        userId: userId), // Pass the userId to SubscriptionPage
+                    builder: (context) => SubscriptionPage(userId: userId),
                   ),
                 );
                 if (result != null) {}
               },
             ),
-
-            // // Seção de Idioma
-            // _buildButton(
-            //   context,
-            //   label: 'Language',
-            //   onPressed: () {
-            //     // Ação para alterar o idioma
-            //   },
-            // ),
-
-            // Seção de Tema
             _buildButton(
               context,
-              label: 'Theme',
+              label: 'Change Theme',
               onPressed: () {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Choose the theme:',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                        const Color.fromARGB(255, 95, 129, 189),
-                                  ),
-                            ),
-                            SizedBox(height: 20),
-                            ListTile(
-                              tileColor: Colors.blue[50],
-                              title: Text(
-                                'Light',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              onTap: () {
-                                // Ação para alterar para tema Claro
-                                Navigator.pop(context); // Fecha a janela
-                              },
-                            ),
-                            ListTile(
-                              tileColor: Colors.blue[50],
-                              title: Text(
-                                'Dark',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              onTap: () {
-                                // Ação para alterar para tema Escuro
-                                Navigator.pop(context); // Fecha a janela
-                              },
-                            ),
-                          ],
-                        ),
+                    return AlertDialog(
+                      title: const Text('Choose Theme'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListTile(
+                            title: const Text('Light Theme'),
+                            onTap: () {},
+                          ),
+                          ListTile(
+                            title: const Text('Dark Theme'),
+                            onTap: () {},
+                          ),
+                        ],
                       ),
                     );
                   },
                 );
               },
             ),
-
-            // Seção de Dúvidas Frequentes
             _buildButton(
               context,
               label: 'FAQs',
               onPressed: () {
-                // Ação para alterar o tema
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const FAQsPage()),
+                );
               },
             ),
-
-            // Seção de Contato
             _buildButton(
               context,
               label: 'Contact us',
               onPressed: () {
-                // Ação de contato
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ContactPage()),
+                );
               },
             ),
-
-            // Seção de Termos de Uso e Política de Privacidade
             _buildExpansionButton(
               context,
               label: 'Terms of Use - Privacy Policy',
@@ -131,14 +85,22 @@ class SettingsPage extends StatelessWidget {
                   context,
                   label: 'Read the Terms of Use',
                   onPressed: () {
-                    // Ação para abrir os termos de uso
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const TermsPage()),
+                    );
                   },
                 ),
                 _buildButton(
                   context,
                   label: 'Read the Privacy Policy',
                   onPressed: () {
-                    // Ação para abrir a política de privacidade
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PrivacyPage()),
+                    );
                   },
                 ),
               ],
@@ -149,7 +111,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  // Função para criar botões simples
   Widget _buildButton(BuildContext context,
       {required String label, required VoidCallback onPressed}) {
     return Padding(
@@ -165,7 +126,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  // Função para criar botões que podem expandir
   Widget _buildExpansionButton(BuildContext context,
       {required String label, required List<Widget> children}) {
     return Padding(
@@ -181,6 +141,113 @@ class SettingsPage extends StatelessWidget {
           child: Text(label),
         ),
         children: children,
+      ),
+    );
+  }
+}
+
+// Página de FAQs
+class FAQsPage extends StatelessWidget {
+  const FAQsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('FAQs')),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Frequently Asked Questions',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Text(
+                '1. What are the gym hours?\nWe are open 24/7 for premium members. Regular members can access from 6 AM to 10 PM.'),
+            SizedBox(height: 10),
+            Text(
+                '2. Can I freeze my membership?\nYes, you can freeze your membership for up to 3 months by contacting support.'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Página de Contato
+class ContactPage extends StatelessWidget {
+  const ContactPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Contact us')),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Contact Pulse Gym',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Text('Email: support@pulsegym.com'),
+            Text('Phone: +351 912 345 678'),
+            Text('Address: Rua de Santa Catarina, 123, Porto - 4400-084'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Página de Termos de Uso
+class TermsPage extends StatelessWidget {
+  const TermsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Terms of Use')),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Pulse Gym - Terms of Use',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Text('1. Membership is non-transferable.'),
+            Text('2. Payments are due monthly and non-refundable.'),
+            Text('3. Gym facilities must be used responsibly.'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Página de Política de Privacidade
+class PrivacyPage extends StatelessWidget {
+  const PrivacyPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Privacy Policy')),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Pulse Gym - Privacy Policy',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Text(
+                '1. We collect and store personal data for membership management.'),
+            Text('2. Your data is never shared with third parties.'),
+            Text('3. You can request data deletion at any time.'),
+          ],
+        ),
       ),
     );
   }
