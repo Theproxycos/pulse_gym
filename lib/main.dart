@@ -63,7 +63,7 @@ class PulseGym extends StatelessWidget {
           foregroundColor: Colors.orange,
         ),
       ),
-      initial: savedThemeMode ?? AdaptiveThemeMode.light,
+      initial: savedThemeMode ?? AdaptiveThemeMode.system,
       builder: (theme, darkTheme) => MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: theme,

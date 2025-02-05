@@ -220,7 +220,6 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                   : const Center(child: Text("No weight data available")),
             ),
             const SizedBox(height: 20),
-           
             ElevatedButton(
               onPressed: () => _showAddMeasurementDialog(),
               style: ElevatedButton.styleFrom(
@@ -243,6 +242,7 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
   }
 
   void _showAddMeasurementDialog() {
+    final theme = Theme.of(context);
     TextEditingController weightController = TextEditingController();
     TextEditingController heightController = TextEditingController();
 
@@ -266,7 +266,9 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
           ),
           actions: [
             TextButton(
-                onPressed: () => Navigator.pop(context), child: Text("Cancel", style: TextStyle(color: Colors.black))),
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancel",
+                    style: TextStyle(color: theme.primaryColor))),
             ElevatedButton(
               onPressed: () {
                 double? newWeight = double.tryParse(weightController.text);

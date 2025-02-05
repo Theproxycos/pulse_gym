@@ -21,7 +21,8 @@ class WorkoutDetailPage extends StatefulWidget {
 class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
   final FirestoreService _firestoreService = FirestoreService();
   String? workoutCardId;
-  List<dynamic> exercises = [];  String? subscriptionPlan; // Store the user's subscription plan
+  List<dynamic> exercises = [];
+  String? subscriptionPlan; // Store the user's subscription plan
 
   @override
   void initState() {
@@ -90,11 +91,13 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
     }
   }
 
-   void _addExercise(Map<String, dynamic> exercise) async {
+  void _addExercise(Map<String, dynamic> exercise) async {
     if (subscriptionPlan == null && exercises.length >= 6) {
       // If no subscription and they have reached the limit, show an alert
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("You can only add up to 6 exercises without a subscription.")),
+        const SnackBar(
+            content: Text(
+                "You can only add up to 6 exercises without a subscription.")),
       );
       return;
     }
@@ -130,10 +133,16 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
     }
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
+    //final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () =>
+              Navigator.of(context).pushReplacementNamed('/homepage'),
+        ),
         title: Text(widget.title),
         backgroundColor: Colors.orange,
         actions: [
@@ -144,7 +153,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                 context: context,
                 builder: (context) => AlertDialog(
                   title: const Text('Delete Workout'),
-                  content: const Text('Are you sure you want to delete this workout?'),
+                  content: const Text(
+                      'Are you sure you want to delete this workout?'),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
@@ -155,7 +165,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                         Navigator.pop(context);
                         _deleteWorkoutCard();
                       },
-                      child: const Text('Delete', style: TextStyle(color: Colors.orange)),
+                      child: const Text('Delete',
+                          style: TextStyle(color: Colors.orange)),
                     ),
                   ],
                 ),
@@ -201,14 +212,17 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                           ),
                           title: Text(
                             exercise['name'],
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           subtitle: Text(
                             "Body Part: ${exercise['bodyPart']}\nEquipment: ${exercise['equipment']}",
-                            style: const TextStyle(color: Colors.grey, fontSize: 14),
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 14),
                           ),
                           trailing: IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.orange),
+                            icon:
+                                const Icon(Icons.delete, color: Colors.orange),
                             onPressed: () => _removeExercise(index),
                           ),
                           onTap: () {
@@ -230,7 +244,9 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                 // Limit exercise addition based on subscription plan
                 if (subscriptionPlan == null && exercises.length >= 6) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("You can only add up to 6 exercises without a subscription.")),
+                    const SnackBar(
+                        content: Text(
+                            "You can only add up to 6 exercises without a subscription.")),
                   );
                   return;
                 }
@@ -257,7 +273,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
                 style: TextStyle(color: Colors.white),
               ),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 textStyle: const TextStyle(fontSize: 16),
                 backgroundColor: Colors.orange,
               ),
