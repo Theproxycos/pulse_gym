@@ -77,14 +77,15 @@ class _NovaSenhaState extends State<NovaSenha> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Change Password',
             style: TextStyle(color: Colors.orange)),
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: theme.primaryColor),
           onPressed: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);

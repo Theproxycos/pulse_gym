@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import '../screens/subscription_page.dart';
 import 'login.dart';
@@ -44,11 +45,24 @@ class SettingsPage extends StatelessWidget {
                         children: [
                           ListTile(
                             title: const Text('Light Theme'),
-                            onTap: () {},
+                            onTap: () {
+                              AdaptiveTheme.of(context).setLight();
+                              Navigator.pop(context);
+                            },
                           ),
                           ListTile(
                             title: const Text('Dark Theme'),
-                            onTap: () {},
+                            onTap: () {
+                              AdaptiveTheme.of(context).setDark();
+                              Navigator.pop(context);
+                            },
+                          ),
+                          ListTile(
+                            title: const Text('System Default'),
+                            onTap: () {
+                              AdaptiveTheme.of(context).setSystem();
+                              Navigator.pop(context);
+                            },
                           ),
                         ],
                       ),

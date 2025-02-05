@@ -15,12 +15,13 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         automaticallyImplyLeading: false, // Remove the back arrow
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
       ),
       body: Center(
@@ -105,6 +106,7 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -121,14 +123,14 @@ class _LoginFormState extends State<LoginForm> {
         // Username field
         TextField(
           controller: _usernameController,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             labelText: 'Username',
-            prefixIcon: Icon(Icons.person_outline, color: Colors.orange),
-            border: UnderlineInputBorder(),
+            prefixIcon: const Icon(Icons.person_outline, color: Colors.orange),
+            border: const UnderlineInputBorder(),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: BorderSide(color: theme.dividerColor),
             ),
-            focusedBorder: UnderlineInputBorder(
+            focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.orange),
             ),
           ),
@@ -138,14 +140,14 @@ class _LoginFormState extends State<LoginForm> {
         TextField(
           controller: _passwordController,
           obscureText: true,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             labelText: 'Password',
-            prefixIcon: Icon(Icons.lock_outline, color: Colors.orange),
-            border: UnderlineInputBorder(),
+            prefixIcon: const Icon(Icons.lock_outline, color: Colors.orange),
+            border: const UnderlineInputBorder(),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: BorderSide(color: theme.primaryColor),
             ),
-            focusedBorder: UnderlineInputBorder(
+            focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.orange),
             ),
           ),
@@ -174,9 +176,11 @@ class _LoginFormState extends State<LoginForm> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
+            Text(
               "Don't have an account?",
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(
+                color: theme.primaryColor,
+              ),
             ),
             TextButton(
               onPressed: () {

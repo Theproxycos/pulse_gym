@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../screens/activity_page.dart';
 import '../screens/all_exercises.dart';
 import '../screens/homepage.dart';
@@ -7,22 +6,25 @@ import '../screens/profile.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   final int currentIndex;
-  final String userId; // Add this parameter
+  final String userId;
 
   const CustomBottomNavBar({
     super.key,
     required this.currentIndex,
     required String currentRoute,
-    required this.userId, // Accept the userId
+    required this.userId,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Obtendo as cores do tema atual
+    final theme = Theme.of(context);
 
     return Container(
       height: 60,
-      decoration: const BoxDecoration(
-        color: Colors.white,
+      decoration: BoxDecoration(
+        color:
+            theme.scaffoldBackgroundColor, // Cor do fundo de acordo com o tema
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
@@ -39,7 +41,7 @@ class CustomBottomNavBar extends StatelessWidget {
             icon: Icons.home,
             label: "Home",
             index: 0,
-            targetPage: HomePage(userId: userId), // Pass the userId here
+            targetPage: HomePage(userId: userId),
           ),
           _buildNavItem(
             context: context,
@@ -48,13 +50,6 @@ class CustomBottomNavBar extends StatelessWidget {
             index: 1,
             targetPage: BodyMeasurementsPage(userId: userId),
           ),
-          // _buildNavItem(
-          //   context: context,
-          //   icon: Icons.euro,
-          //   label: "Explore",
-          //   index: 2,
-          //   targetPage: const ExplorePage(userId: userId),
-          // ),
           _buildNavItem(
             context: context,
             icon: Icons.fitness_center,
@@ -82,6 +77,7 @@ class CustomBottomNavBar extends StatelessWidget {
     required Widget targetPage,
   }) {
     final isActive = index == currentIndex;
+    final theme = Theme.of(context);
 
     return GestureDetector(
       onTap: () {
@@ -102,13 +98,17 @@ class CustomBottomNavBar extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: isActive ? Colors.orange : Colors.grey,
+            color: isActive
+                ? Colors.orange
+                : theme.iconTheme.color, // Cor ativa e inativa
           ),
           Text(
             label,
             style: TextStyle(
               fontSize: 12,
-              color: isActive ? Colors.orange : Colors.grey,
+              color: isActive
+                  ? Colors.orange
+                  : theme.textTheme.bodyMedium?.color, // Cor do texto
             ),
           ),
         ],

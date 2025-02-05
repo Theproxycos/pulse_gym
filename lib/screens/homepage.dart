@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
@@ -204,10 +205,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Obtém as cores do tema
+    final isDarkMode = AdaptiveTheme.of(context).mode.isDark;
+    final textColor = theme.primaryColor;
+    final backgroundColor = theme.cardColor; // Cor do fundo adaptável ao tema
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.scaffoldBackgroundColor,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -244,8 +249,8 @@ class _HomePageState extends State<HomePage> {
                   if (_userName != null)
                     TextSpan(
                       text: _userName!,
-                      style:
-                          TextStyle(color: Colors.black), // Username in black
+                      style: TextStyle(
+                          color: theme.primaryColor), // Username in black
                     ),
                 ],
               ),
@@ -256,7 +261,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: const Icon(Icons.notifications),
             onPressed: () {},
-            color: Colors.black,
+            color: theme.primaryColor,
           ),
         ],
         elevation: 1,
@@ -266,35 +271,51 @@ class _HomePageState extends State<HomePage> {
           child: Padding(
             padding:
                 const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 10.0),
-            child: EasyDateTimeLine(
-              initialDate: today,
-              onDateChange: (selectedDate) {
-                setState(() {
-                  _selectedDate = selectedDate;
-                  selectedWeekday =
-                      selectedDate.weekday; // Atualiza o dia da semana
-                });
-                _fetchWorkoutCards(); // Recarrega os workouts
-              },
-              headerProps: const EasyHeaderProps(
-                monthPickerType: MonthPickerType.switcher,
-                dateFormatter: DateFormatter.fullDateDMY(),
+            child: Theme(
+              data: Theme.of(context).copyWith(
+                textTheme: TextTheme(
+                  bodyLarge: TextStyle(color: theme.primaryColor),
+                ),
               ),
-              dayProps: const EasyDayProps(
-                dayStructure: DayStructure.dayStrDayNum,
-                height: 60.0,
-                width: 60.0,
-                activeDayStyle: DayStyle(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xff3371FF),
-                        Color(0xff8426D6),
-                      ],
+              child: EasyDateTimeLine(
+                initialDate: today,
+                onDateChange: (selectedDate) {
+                  setState(() {
+                    _selectedDate = selectedDate;
+                    selectedWeekday = selectedDate.weekday;
+                  });
+                  _fetchWorkoutCards();
+                },
+                headerProps: EasyHeaderProps(
+                  monthPickerType: MonthPickerType.switcher,
+                  dateFormatter: DateFormatter.fullDateDMY(),
+                ),
+                dayProps: EasyDayProps(
+                  dayStructure: DayStructure.dayStrDayNum,
+                  height: 60.0,
+                  width: 60.0,
+                  inactiveDayStyle: DayStyle(
+                    decoration: BoxDecoration(
+                      color: backgroundColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
                     ),
+                    dayNumStyle: TextStyle(color: textColor),
+                    dayStrStyle: TextStyle(color: textColor),
+                  ),
+                  activeDayStyle: const DayStyle(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xff3371FF),
+                          Color(0xff8426D6),
+                        ],
+                      ),
+                    ),
+                    dayNumStyle: TextStyle(color: Colors.white),
+                    dayStrStyle: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
@@ -334,26 +355,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildSectionTitle(String title) {
+    final theme = Theme.of(context);
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
-        color: Colors.black,
+        color: theme.primaryColor,
       ),
     );
   }
 
   Widget _buildSectionTitleWithButton(String title, VoidCallback onPressed) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: theme.primaryColor,
           ),
         ),
         IconButton(
@@ -365,6 +388,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showAddWorkoutDialog() {
+    final theme = Theme.of(context);
     final TextEditingController titleController = TextEditingController();
     final TextEditingController subtitleController = TextEditingController();
     int selectedDay = DateTime.now().weekday;
@@ -411,8 +435,8 @@ class _HomePageState extends State<HomePage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text("Cancel",
-                      style: TextStyle(color: Colors.black)),
+                  child: Text("Cancel",
+                      style: TextStyle(color: theme.primaryColor)),
                 ),
                 TextButton(
                   onPressed: () {
@@ -435,10 +459,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildSectionSubitle(String title) {
+    final theme = Theme.of(context);
     return Text(
       title,
-      style:
-          const TextStyle(fontSize: 14, color: Color.fromARGB(255, 49, 48, 48)),
+      style: TextStyle(fontSize: 14, color: theme.secondaryHeaderColor),
     );
   }
 
@@ -465,6 +489,7 @@ class _HomePageState extends State<HomePage> {
     required String subtitle,
     required IconData icon,
   }) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () async {
         final bool? shouldRefresh = await Navigator.push(
@@ -496,8 +521,9 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Icon(icon, color: Colors.orange, size: 40),
                 const SizedBox(height: 10),
-                Text(title, style: const TextStyle(color: Colors.white)),
-                Text(subtitle, style: const TextStyle(color: Colors.grey)),
+                Text(title, style: TextStyle(color: theme.primaryColor)),
+                Text(subtitle,
+                    style: TextStyle(color: theme.secondaryHeaderColor)),
               ],
             ),
           ),
@@ -507,36 +533,38 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildTrainerCard() {
+    final theme = Theme.of(context);
+    final isDarkMode = AdaptiveTheme.of(context).mode.isDark;
+
+    final cardColor = isDarkMode ? Colors.blueGrey[900] : Colors.blue[50];
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final buttonColor = isDarkMode ? Colors.orange[700] : Colors.orange;
+
     if (_userTier == 'Plan One') {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.only(
-              top: 20.0), // Add space on top of the button
+          padding: const EdgeInsets.only(top: 20.0),
           child: ElevatedButton(
             onPressed: () {
-              // Navigate to the subscription page
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SubscriptionPage(
-                    userId: widget.userId,
-                  ), // Replace with your SubscriptionPage widget
+                  builder: (context) => SubscriptionPage(userId: widget.userId),
                 ),
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange, // Button color
+              backgroundColor: buttonColor,
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8), // Rounded corners
+                borderRadius: BorderRadius.circular(8),
               ),
-              minimumSize: Size(
-                  double.infinity, 80), // Set constant height for button (50)
+              minimumSize: const Size(double.infinity, 80),
             ),
-            child: const Text(
+            child: Text(
               "Purchase a subscription plan to gain access to a personal trainer",
               style: TextStyle(
-                color: Colors.white, // Text color inside button
+                color: textColor,
                 fontSize: 16,
               ),
               textAlign: TextAlign.center,
@@ -547,7 +575,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Card(
-      color: Colors.blue[50],
+      color: cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
         leading: GestureDetector(
@@ -577,13 +605,16 @@ class _HomePageState extends State<HomePage> {
           },
           child: const Icon(Icons.calendar_month, color: Colors.blue),
         ),
-        title: const Text("Your Personal Trainer"),
+        title:
+            Text("Your Personal Trainer", style: TextStyle(color: textColor)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Contact: trainer@pulsegym.com"),
-            const Text("Specialization: Personal Trainer"),
-            SizedBox(height: 10),
+            Text("Contact: trainer@pulsegym.com",
+                style: TextStyle(color: textColor)),
+            Text("Specialization: Personal Trainer",
+                style: TextStyle(color: textColor)),
+            const SizedBox(height: 10),
             _selectedTrainerAppointmentDate != null &&
                     _selectedTrainerTime != null
                 ? Text(
@@ -594,7 +625,7 @@ class _HomePageState extends State<HomePage> {
                       _selectedTrainerTime!.hour,
                       _selectedTrainerTime!.minute,
                     ))}',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   )
                 : const Text('No appointment set'),
           ],
@@ -604,36 +635,36 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildNutritionistCard() {
+    final isDarkMode = AdaptiveTheme.of(context).mode.isDark;
+    final cardColor = isDarkMode ? Colors.green[900] : Colors.green[50];
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final buttonColor = isDarkMode ? Colors.orange[700] : Colors.orange;
+
     if (_userTier == 'Plan One' || _userTier == 'Plan Two') {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.only(
-              top: 20.0), // Add space on top of the button
+          padding: const EdgeInsets.only(top: 20.0),
           child: ElevatedButton(
             onPressed: () {
-              // Navigate to the subscription page
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SubscriptionPage(
-                    userId: widget.userId,
-                  ), // Replace with your SubscriptionPage widget
+                  builder: (context) => SubscriptionPage(userId: widget.userId),
                 ),
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange, // Button color
+              backgroundColor: buttonColor,
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8), // Rounded corners
+                borderRadius: BorderRadius.circular(8),
               ),
-              minimumSize: Size(
-                  double.infinity, 80), // Set constant height for button (50)
+              minimumSize: const Size(double.infinity, 80),
             ),
-            child: const Text(
+            child: Text(
               "Purchase a subscription plan to gain access to a nutritionist",
               style: TextStyle(
-                color: Colors.white, // Text color inside button
+                color: textColor,
                 fontSize: 16,
               ),
               textAlign: TextAlign.center,
@@ -644,7 +675,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Card(
-      color: Colors.green[50],
+      color: cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: ListTile(
         leading: GestureDetector(
@@ -674,13 +705,15 @@ class _HomePageState extends State<HomePage> {
           },
           child: const Icon(Icons.calendar_month, color: Colors.green),
         ),
-        title: const Text("Your Nutritionist"),
+        title: Text("Your Nutritionist", style: TextStyle(color: textColor)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Contact: nutritionist@pulsegym.com"),
-            const Text("Specialization: Diet & Nutrition"),
-            SizedBox(height: 10),
+            Text("Contact: nutritionist@pulsegym.com",
+                style: TextStyle(color: textColor)),
+            Text("Specialization: Diet & Nutrition",
+                style: TextStyle(color: textColor)),
+            const SizedBox(height: 10),
             _selectedAppointmentDate != null && _selectedTime != null
                 ? Text(
                     'Appointment: ${_selectedAppointmentDate!.day}-${_selectedAppointmentDate!.month}-${_selectedAppointmentDate!.year} ${DateFormat('HH:mm').format(DateTime(
@@ -690,7 +723,7 @@ class _HomePageState extends State<HomePage> {
                       _selectedTime!.hour,
                       _selectedTime!.minute,
                     ))}',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   )
                 : const Text('No appointment set'),
           ],

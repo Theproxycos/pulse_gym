@@ -16,18 +16,19 @@ class _EditProfileState extends State<EditProfile> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
-  late String userId;  // Definindo a variável que irá armazenar o userId
+  late String userId; // Definindo a variável que irá armazenar o userId
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    
+
     // Agora, o código que recupera o userId está em didChangeDependencies
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     if (args != null && args.containsKey('userId')) {
       userId = args['userId'];
       print("UserId recebido: $userId");
-      _loadUserData();  // Carregar os dados do usuário após pegar o userId
+      _loadUserData(); // Carregar os dados do usuário após pegar o userId
     }
   }
 
@@ -59,14 +60,16 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     print("UserId na build: $userId");
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Profile', style: TextStyle(color: Colors.orange)),
-        backgroundColor: Colors.white,
+        title:
+            const Text('Edit Profile', style: TextStyle(color: Colors.orange)),
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: theme.primaryColor),
           onPressed: () {
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
