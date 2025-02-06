@@ -4,12 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart';
 import 'register_page.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: Login(),
-  ));
-}
-
 class Login extends StatelessWidget {
   const Login({super.key});
 

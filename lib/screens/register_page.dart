@@ -250,12 +250,13 @@ class _RegisterPageState extends State<RegisterPage> {
     String? _errorText;
 
     String? _validatePassword(String value) {
-      if (value.isEmpty) return 'A senha é obrigatória';
-      if (value.length < 8) return 'A senha deve ter pelo menos 8 caracteres';
+      if (value.isEmpty) return 'The password is mandatory';
+      if (value.length < 8)
+        return 'The password must be at least 8 characters long';
       if (!RegExp(r'[A-Z]').hasMatch(value))
-        return 'A senha deve conter pelo menos uma letra maiúscula';
+        return 'The password must contain at least one capital letter';
       if (!RegExp(r'[0-9]').hasMatch(value))
-        return 'A senha deve conter pelo menos um número';
+        return 'The password must contain at least one number';
       return null;
     }
 

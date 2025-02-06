@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../services/firestore.dart';
 
 class NovaSenha extends StatefulWidget {
-  // Remoção do parâmetro userId aqui, pois ele será recebido via argumentos
   NovaSenha({Key? key}) : super(key: key);
 
   @override
@@ -18,19 +17,18 @@ class _NovaSenhaState extends State<NovaSenha> {
   bool _confirmeSenhaVisivel = false;
   String? _senhaAtual;
 
-  late String userId; // Variável para armazenar o userId
+  late String userId;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    // Recupera o userId passado via argumentos
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     if (args != null && args.containsKey('userId')) {
       userId = args['userId'];
       print("UserId recebido: $userId");
-      _loadCurrentPassword(); // Carrega a senha atual após pegar o userId
+      _loadCurrentPassword();
     }
   }
 
@@ -40,7 +38,7 @@ class _NovaSenhaState extends State<NovaSenha> {
       setState(() {
         _senhaAtual = userData['password'] ?? '';
       });
-      print('Senha atual: $_senhaAtual'); // Para depuração
+      print('Senha atual: $_senhaAtual');
     }
   }
 
@@ -48,6 +46,7 @@ class _NovaSenhaState extends State<NovaSenha> {
     String novaSenha = _novaSenhaController.text;
     String confirmeSenha = _confirmeSenhaController.text;
 
+    // Validação de senha
     if (novaSenha.isEmpty || confirmeSenha.isEmpty) {
       _showMessage('Os campos de senha não podem estar vazios.');
       return;
@@ -58,12 +57,23 @@ class _NovaSenhaState extends State<NovaSenha> {
       return;
     }
 
-    // Atualizar a senha no Firestore
+    if (!_isPasswordValid(novaSenha)) {
+      _showMessage(
+          'A senha deve ter pelo menos 6 caracteres, incluir um número e uma letra maiúscula.');
+      return;
+    }
+
     await _firestoreService.updateUserData(userId, {
       'password': novaSenha,
     });
 
     _showMessage('Senha alterada com sucesso!', isSuccess: true);
+  }
+
+  bool _isPasswordValid(String password) {
+    // Expressão regular para validar a senha
+    RegExp regExp = RegExp(r'^(?=.*[A-Z])(?=.*\d).{6,}$');
+    return regExp.hasMatch(password);
   }
 
   void _showMessage(String message, {bool isSuccess = false}) {

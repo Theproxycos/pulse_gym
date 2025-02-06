@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: Newpass(),
-  ));
-}
-
 class Newpass extends StatelessWidget {
   const Newpass({super.key});
 
