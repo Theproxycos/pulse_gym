@@ -533,14 +533,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildTrainerCard() {
-    final theme = Theme.of(context);
     final isDarkMode = AdaptiveTheme.of(context).mode.isDark;
 
     final cardColor = isDarkMode ? Colors.blueGrey[900] : Colors.blue[50];
     final textColor = isDarkMode ? Colors.white : Colors.black;
     final buttonColor = isDarkMode ? Colors.orange[700] : Colors.orange;
 
-    if (_userTier == 'Plan One') {
+    if (_userTier == null || _userTier == 'Plan One') {
       return Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 20.0),
@@ -562,7 +561,7 @@ class _HomePageState extends State<HomePage> {
               minimumSize: const Size(double.infinity, 80),
             ),
             child: Text(
-              "Purchase a subscription plan to gain access to a personal trainer",
+              "Purchase a subscription Plan Two or higher to gain access to a personal trainer",
               style: TextStyle(
                 color: textColor,
                 fontSize: 16,
@@ -640,7 +639,9 @@ class _HomePageState extends State<HomePage> {
     final textColor = isDarkMode ? Colors.white : Colors.black;
     final buttonColor = isDarkMode ? Colors.orange[700] : Colors.orange;
 
-    if (_userTier == 'Plan One' || _userTier == 'Plan Two') {
+    if (_userTier == null ||
+        _userTier == 'Plan One' ||
+        _userTier == 'Plan Two') {
       return Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 20.0),
@@ -662,7 +663,7 @@ class _HomePageState extends State<HomePage> {
               minimumSize: const Size(double.infinity, 80),
             ),
             child: Text(
-              "Purchase a subscription plan to gain access to a nutritionist",
+              "Purchase a subscription Plan Three to gain access to a nutritionist",
               style: TextStyle(
                 color: textColor,
                 fontSize: 16,

@@ -239,21 +239,58 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildTextField(String label,
-      {bool isPassword = false,
-      bool isRequired = false,
-      TextInputType keyboardType = TextInputType.text,
-      required TextEditingController controller}) {
-    return TextField(
-      controller: controller,
-      obscureText: isPassword,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        labelText: label + (isRequired ? ' *' : ''),
-        labelStyle: const TextStyle(fontSize: 14),
-        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-        border: const UnderlineInputBorder(),
-      ),
+  Widget _buildTextField(
+    String label, {
+    bool isPassword = false,
+    bool isRequired = false,
+    TextInputType keyboardType = TextInputType.text,
+    required TextEditingController controller,
+  }) {
+    bool _isObscured = true;
+    String? _errorText;
+
+    String? _validatePassword(String value) {
+      if (value.isEmpty) return 'A senha é obrigatória';
+      if (value.length < 8) return 'A senha deve ter pelo menos 8 caracteres';
+      if (!RegExp(r'[A-Z]').hasMatch(value))
+        return 'A senha deve conter pelo menos uma letra maiúscula';
+      if (!RegExp(r'[0-9]').hasMatch(value))
+        return 'A senha deve conter pelo menos um número';
+      return null;
+    }
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return TextField(
+          controller: controller,
+          obscureText: isPassword && _isObscured,
+          keyboardType: keyboardType,
+          onChanged: (value) {
+            setState(() {
+              _errorText = isPassword ? _validatePassword(value) : null;
+            });
+          },
+          decoration: InputDecoration(
+            labelText: label + (isRequired ? ' *' : ''),
+            labelStyle: const TextStyle(fontSize: 14),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+            border: const UnderlineInputBorder(),
+            errorText: _errorText,
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                        _isObscured ? Icons.visibility_off : Icons.visibility),
+                    onPressed: () {
+                      setState(() {
+                        _isObscured = !_isObscured;
+                      });
+                    },
+                  )
+                : null,
+          ),
+        );
+      },
     );
   }
 
