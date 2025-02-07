@@ -88,16 +88,16 @@ class _ProfilePageState extends State<ProfilePage> {
           _isLoading = false; // Remover indicador de carregamento
         });
 
-        _showMessage('Foto de perfil atualizada com sucesso!', isSuccess: true);
+        _showMessage('Profile photo successfully updated!', isSuccess: true);
       } else {
-        throw Exception("Não foi possível redimensionar a imagem.");
+        throw Exception("The image could not be resized.");
       }
     } catch (e) {
       setState(() {
         _isLoading = false; // Remover indicador de carregamento
       });
-      print('Erro ao processar a imagem: $e');
-      _showMessage('Erro ao processar a imagem. Erro: $e');
+      print('Error processing the image: $e');
+      _showMessage('Error processing the image. Error: $e');
     }
   }
 
