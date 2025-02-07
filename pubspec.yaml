@@ -43,7 +43,7 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.0.16  # Add this line (check for the latest version)
-  easy_date_timeline: ^2.0.4
+  easy_date_timeline: ^2.0.6
   select_body_parts: ^0.0.1
   http: ^1.2.2
   flutter_native_splash: ^2.3.0
@@ -100,23 +100,6 @@ flutter:
     - lib/assets/logo.png
     - lib/assets/logo-nobg.png
     - lib/assets/logo_white.png
-    - lib/assets/musclesGroups/chest.png
-    - lib/assets/musclesGroups/shoulder.png
-    - lib/assets/musclesGroups/latissimus_dorsi.png
-    - lib/assets/musclesGroups/rectus_abdominis.png
-    - lib/assets/musclesGroups/hamstring.png
-    - lib/assets/musclesGroups/abductors.png
-    - lib/assets/musclesGroups/adductors.png
-    - lib/assets/musclesGroups/gluteal_muscles.png
-    - lib/assets/musclesGroups/biceps.png
-    - lib/assets/musclesGroups/trapezius.png
-    - lib/assets/musclesGroups/calf.png
-    - lib/assets/musclesGroups/triceps.png
-    - lib/assets/musclesGroups/forearm.png
-    - lib/assets/musclesGroups/obliques.png
-    - lib/assets/musclesGroups/lower_back.png
-    - lib/assets/musclesGroups/quadriceps.png
-    - lib/assets/musclesGroups/cardio.png
     - lib/assets/logo-nobg.png
   #   - images/a_dot_ham.jpeg
 

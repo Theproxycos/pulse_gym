@@ -1,7 +1,6 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import '../screens/subscription_page.dart';
-import 'login.dart';
 
 class SettingsPage extends StatelessWidget {
   final String userId; // Parâmetro userId

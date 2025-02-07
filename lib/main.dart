@@ -13,7 +13,6 @@ import 'screens/all_exercises.dart';
 import 'screens/profile.dart';
 import 'screens/editprofile.dart';
 import 'screens/nova_senha.dart';
-import 'screens/exercises_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,7 +76,6 @@ class PulseGym extends StatelessWidget {
           '/newpass': (context) => const Newpass(),
           '/register_page': (context) => const RegisterPage(),
           '/settings_page': (context) => SettingsPage(userId: userId ?? ''),
-          '/exercises_page': (context) => ExercisesPage(userId: userId ?? ''),
           '/all_exercises': (context) => GymPage(userId: userId ?? ''),
           '/profile': (context) => ProfilePage(userId: userId ?? ''),
           '/editprofile': (context) => EditProfile(),

@@ -222,7 +222,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context); // Obtém as cores do tema
-    final isDarkMode = AdaptiveTheme.of(context).mode.isDark;
     final textColor = theme.primaryColor;
     final backgroundColor = theme.cardColor; // Cor do fundo adaptável ao tema
     return Scaffold(
