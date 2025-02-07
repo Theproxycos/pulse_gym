@@ -51,7 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // Converte a imagem para Base64, redimensiona e armazena no Firestore
+  // Converte a imagem para Base64, redimensiona dependendo da orientação e armazena no Firestore
   Future<void> _convertImageToBase64(File imageFile) async {
     try {
       setState(() {
@@ -63,8 +63,17 @@ class _ProfilePageState extends State<ProfilePage> {
       img.Image? image = img.decodeImage(Uint8List.fromList(imageBytes));
 
       if (image != null) {
-        // Redimensionar a imagem para 500x500 pixels (ajuste conforme necessário)
-        img.Image resizedImage = img.copyResize(image, width: 500, height: 700);
+        img.Image resizedImage;
+
+        // Se a imagem estiver na horizontal (largura maior que altura)
+        if (image.width > image.height) {
+          // Redimensionar para uma largura fixa de 600px (ajuste conforme necessário) e proporcional à altura
+          resizedImage = img.copyResize(image, width: 600);
+        } else {
+          // Se a imagem estiver na vertical (altura maior que largura)
+          // Redimensionar para uma altura fixa de 800px (ajuste conforme necessário) e proporcional à largura
+          resizedImage = img.copyResize(image, height: 800);
+        }
 
         // Converter a imagem redimensionada para Base64
         String base64String = base64Encode(img.encodeJpg(resizedImage));
