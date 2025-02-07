@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
+import 'package:pulse_gym/services/firestore.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
 import 'WorkoutDetailPage.dart';
 import 'settings_page.dart';
@@ -18,6 +21,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String? _profileImageBase64;
+
   DateTime today = DateTime.now();
   // ignore: unused_field
   DateTime? _selectedDate;
@@ -44,6 +49,17 @@ class _HomePageState extends State<HomePage> {
     _fetchAppointment(); // Fetch the appointment
     _fetchTrainerAppointment();
     _fetchUserTier(); // Fetch the user tier
+    _loadProfileImage();
+  }
+
+  // Função para buscar a imagem de perfil do Firestore
+  void _loadProfileImage() async {
+    final userData = await FirestoreService().getUserData(widget.userId);
+    if (userData != null && userData['profileImageBase64'] != null) {
+      setState(() {
+        _profileImageBase64 = userData['profileImageBase64'];
+      });
+    }
   }
 
   Future<void> _fetchUserTier() async {
@@ -217,27 +233,32 @@ class _HomePageState extends State<HomePage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SettingsPage(
-                      userId: widget.userId,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingsPage(
+                        userId: widget.userId,
+                      ),
                     ),
-                  ),
-                ).then((_) {
-                  _fetchUserName(); // Refresh user name
-                  _fetchWorkoutCards(); // Refresh workout cards
-                  _fetchAppointment(); // Refresh appointments
-                  _fetchTrainerAppointment(); // Refresh trainer appointments
-                  _fetchUserTier(); // Refresh user tier
-                });
-              },
-              child: CircleAvatar(
-                radius: 18,
-                backgroundColor: Colors.grey[300],
-              ),
-            ),
+                  ).then((_) {
+                    _fetchUserName(); // Refresh user name
+                    _fetchWorkoutCards(); // Refresh workout cards
+                    _fetchAppointment(); // Refresh appointments
+                    _fetchTrainerAppointment(); // Refresh trainer appointments
+                    _fetchUserTier(); // Refresh user tier
+                  });
+                },
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.grey[300],
+                  backgroundImage: _profileImageBase64 != null
+                      ? MemoryImage(base64Decode(_profileImageBase64!))
+                      : null,
+                  child: _profileImageBase64 == null
+                      ? Icon(Icons.person, size: 24, color: Colors.white)
+                      : null,
+                )),
             const SizedBox(width: 10),
             Text.rich(
               TextSpan(
