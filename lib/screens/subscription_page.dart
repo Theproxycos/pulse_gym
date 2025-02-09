@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SubscriptionPage extends StatefulWidget {
-  final String userId; // Pass the user ID when navigating to this page
+  final String userId; // Passar o ID do usuário ao navegar para esta página
 
   const SubscriptionPage({super.key, required this.userId});
 
@@ -12,8 +12,8 @@ class SubscriptionPage extends StatefulWidget {
 
 class _SubscriptionPageState extends State<SubscriptionPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String? _userName; // To store the user's name
-  int? selectedPlanIndex; // To track the selected plan
+  String? _userName; // Para armazenar o nome do usuário
+  int? selectedPlanIndex; // Para acompanhar o plano selecionado
   int? currentPlanIndex; // Índice do plano já comprado
 
   @override
@@ -44,7 +44,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     }
   }
 
-// Converter nome do plano salvo no Firestore para um índice correspondente
+  // Converter nome do plano salvo no Firestore para um índice correspondente
   int? _getPlanIndex(String plan) {
     switch (plan) {
       case "Plan One":
@@ -64,7 +64,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           await _firestore.collection('users').doc(widget.userId).get();
       if (userDoc.exists) {
         setState(() {
-          _userName = userDoc['username']; // Assuming the field is 'username'
+          _userName = userDoc['username']; // Supondo que o campo é 'username'
         });
       }
     } catch (e) {
@@ -72,7 +72,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     }
   }
 
-  // This method updates the user's selected plan in Firestore
+  // Este método atualiza o plano selecionado do usuário no Firestore
   Future<void> _updateUserPlan() async {
     if (selectedPlanIndex == null) {
       // Se nenhum plano foi selecionado
@@ -268,23 +268,23 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     color: Colors.black,
                   ),
                   onPressed: () {
-                    // Show a custom dialog when the info icon is pressed
+                    // Exibir um diálogo personalizado quando o ícone de informações for pressionado
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return Dialog(
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(10), // Rounded corners
+                            borderRadius: BorderRadius.circular(
+                                10), // Cantos arredondados
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
-                              mainAxisSize:
-                                  MainAxisSize.min, // Size based on content
+                              mainAxisSize: MainAxisSize
+                                  .min, // Tamanho baseado no conteúdo
                               children: [
                                 Text(
-                                  title, // Plan title passed here
+                                  title, // Título do plano passado aqui
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
@@ -292,7 +292,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                 ),
                                 const SizedBox(height: 10),
                                 Text(
-                                  description, // Plan description passed here
+                                  description, // Descrição do plano passada aqui
                                   style: const TextStyle(fontSize: 16),
                                   textAlign: TextAlign.center,
                                 ),
@@ -300,7 +300,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context)
-                                        .pop(); // Close the dialog
+                                        .pop(); // Fechar o diálogo
                                   },
                                   child: const Text(
                                     'Close',

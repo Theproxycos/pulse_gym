@@ -124,6 +124,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
+  // Função para criar um botão
   Widget _buildButton(BuildContext context,
       {required String label, required VoidCallback onPressed}) {
     return Padding(
@@ -139,6 +140,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
+  // Função para criar um botão expansível
   Widget _buildExpansionButton(BuildContext context,
       {required String label, required List<Widget> children}) {
     return Padding(

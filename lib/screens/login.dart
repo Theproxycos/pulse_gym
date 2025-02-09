@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // For Firestore
+import 'package:cloud_firestore/cloud_firestore.dart'; // Para Firestore
 import 'package:shared_preferences/shared_preferences.dart';
 import 'homepage.dart';
 import 'register_page.dart';
@@ -13,7 +13,7 @@ class Login extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Remove the back arrow
+        automaticallyImplyLeading: false, // Remove a seta de voltar
         centerTitle: true,
         backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
@@ -38,6 +38,7 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
+  // Função de login
   Future<void> _login(BuildContext context) async {
     String username = _usernameController.text.trim();
     String password = _passwordController.text;
@@ -54,12 +55,12 @@ class _LoginFormState extends State<LoginForm> {
     });
 
     try {
-      // Fetch user from Firestore
+      // Buscar o utilizador no Firestore
       QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('users') // Replace with your Firestore collection name
+          .collection('users') // Substituir pelo nome da coleção do Firestore
           .where('username', isEqualTo: username)
           .where('password',
-              isEqualTo: password) // Use hashed passwords in production
+              isEqualTo: password) // Usar senhas com hash em produção
           .get();
 
       if (snapshot.docs.isNotEmpty) {
@@ -74,15 +75,14 @@ class _LoginFormState extends State<LoginForm> {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('userId', userId);
 
-        // Redirect to homepage
-        // Navigator.of(context).pushReplacementNamed('/homepage');
+        // Redirecionar para a página principal
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => HomePage(userId: snapshot.docs.first.id),
           ),
         );
       } else {
-        // Login failed
+        // Falha no login
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Invalid username or password')),
         );
@@ -106,15 +106,15 @@ class _LoginFormState extends State<LoginForm> {
       children: [
         Column(
           children: [
-            // App logo
+            // Logo da aplicação
             Image.asset(
-              'lib/assets/logo-nobg.png', // Replace with your logo's path
+              'lib/assets/logo-nobg.png', // Substituir pelo caminho da sua logo
               height: 80,
             ),
           ],
         ),
         const SizedBox(height: 30),
-        // Username field
+        // Campo para o nome de utilizador
         TextField(
           controller: _usernameController,
           decoration: InputDecoration(
@@ -130,7 +130,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
         const SizedBox(height: 15),
-        // Password field
+        // Campo para a palavra-passe
         TextField(
           controller: _passwordController,
           obscureText: true,
@@ -147,11 +147,11 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ),
         const SizedBox(height: 20),
-        // Loading indicator
+        // Indicador de carregamento
         if (_isLoading)
           const CircularProgressIndicator()
         else
-          // Login button
+          // Botão de login
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -166,7 +166,7 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
         const SizedBox(height: 20),
-        // Register link
+        // Link para o registo
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

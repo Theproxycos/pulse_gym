@@ -22,23 +22,22 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
   final FirestoreService _firestoreService = FirestoreService();
   String? workoutCardId;
   List<dynamic> exercises = [];
-  String? subscriptionPlan; // Store the user's subscription plan
+  String? subscriptionPlan; // Armazena o plano de subscrição do utilizador
 
   @override
   void initState() {
     super.initState();
     _loadWorkoutCard();
-    _loadSubscriptionPlan(); // Load the subscription plan for the user
+    _loadSubscriptionPlan(); // Carrega o plano de subscrição do utilizador
   }
 
-// Fetch the user's subscription plan
+// Busca o plano de subscrição do utilizador
   Future<void> _loadSubscriptionPlan() async {
     try {
       final userDoc = await _firestoreService.getUserById(widget.userId);
       if (userDoc != null) {
         setState(() {
-          subscriptionPlan = userDoc[
-              'subscription_plan']; // Assuming 'subscription_plan' is the field
+          subscriptionPlan = userDoc['subscription_plan'];
         });
       }
     } catch (e) {
@@ -82,7 +81,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
       );
 
       // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Workout updated successfully!')),
+      //   const SnackBar(content: Text('Workout atualizado com sucesso!')),
       // );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -93,7 +92,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
 
   void _addExercise(Map<String, dynamic> exercise) async {
     if (subscriptionPlan == null && exercises.length >= 6) {
-      // If no subscription and they have reached the limit, show an alert
+      // Se não houver subscrição e o utilizador atingir o limite, mostra um alerta
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text(
@@ -125,7 +124,8 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
         const SnackBar(content: Text('Workout deleted successfully!')),
       );
 
-      Navigator.pop(context, true); // Send 'true' back to the previous screen
+      Navigator.pop(
+          context, true); // Envia 'true' de volta para a tela anterior
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to delete workout: $e')),
@@ -241,7 +241,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
             ),
             ElevatedButton.icon(
               onPressed: () async {
-                // Limit exercise addition based on subscription plan
+                // Limita a adição de exercícios com base no plano de subscrição
                 if (subscriptionPlan == null && exercises.length >= 6) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

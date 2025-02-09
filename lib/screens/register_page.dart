@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../services/firestore.dart'; // For Firestore service
-import 'package:email_validator/email_validator.dart'; // For email format validation
+import '../services/firestore.dart'; // Serviço Firestore
+import 'package:email_validator/email_validator.dart'; // Validação do formato de email
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -130,7 +130,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 onPressed: () async {
                   FirestoreService firestoreService = FirestoreService();
 
-                  // Check if required fields are filled
+                  // Verifica se todos os campos obrigatórios foram preenchidos
                   if (_usernameController.text.isEmpty ||
                       _phoneController.text.isEmpty ||
                       _emailController.text.isEmpty ||
@@ -145,34 +145,35 @@ class _RegisterPageState extends State<RegisterPage> {
                     return;
                   }
 
-                  // Check if email format is valid
+                  // Verifica se o formato do email é válido
                   if (!EmailValidator.validate(_emailController.text)) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Invalid email format')),
                     );
                     return;
                   }
-                  // Check if username already exists
+
+                  // Verifica se o nome de utilizador já existe
                   bool usernameExists = await firestoreService
                       .doesUsernameExist(_usernameController.text);
                   if (usernameExists) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Username already taken')),
                     );
-                    return; // Prevent registration if username exists
+                    return; // Impede o registo se o nome de utilizador já existir
                   }
 
-                  // Check if date of birth is valid
+                  // Verifica se a data de nascimento é válida
                   DateTime? dateOfBirth = DateFormat('dd/MM/yyyy')
                       .parse(_dateController.text, true);
                   if (dateOfBirth.isAfter(DateTime.now())) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Invalid date of birth')),
                     );
-                    return; // Prevent registration if date of birth is in the future
+                    return; // Impede o registo se a data de nascimento for no futuro
                   }
 
-                  // Check if password and re-entered password match
+                  // Verifica se a palavra-passe e a confirmação coincidem
                   if (_passwordController.text !=
                       _passwordconfirmController.text) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -182,7 +183,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   }
 
                   try {
-                    // Check if email exists in Firestore
+                    // Verifica se o email já existe na Firestore
                     bool emailExists = await firestoreService
                         .emailExists(_emailController.text);
 
@@ -193,7 +194,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       return;
                     }
 
-                    // Register user if email doesn't exist
+                    // Regista o utilizador se o email não existir
                     await firestoreService.registerUser(
                       username: _usernameController.text,
                       phoneNumber: _phoneController.text,
@@ -205,13 +206,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       country: _selectedCountry,
                     );
 
-                    // Show success message
+                    // Exibe mensagem de sucesso
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content: Text('User registered successfully!')),
                     );
 
-                    // Redirect to login page
+                    // Redireciona para a página de login
                     Navigator.of(context).pushReplacementNamed('/login');
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -249,6 +250,7 @@ class _RegisterPageState extends State<RegisterPage> {
     bool _isObscured = true;
     String? _errorText;
 
+    // Valida a palavra-passe
     String? _validatePassword(String value) {
       if (value.isEmpty) return 'The password is mandatory';
       if (value.length < 8)

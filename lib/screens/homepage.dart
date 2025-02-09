@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,14 +23,13 @@ class _HomePageState extends State<HomePage> {
   String? _profileImageBase64;
 
   DateTime today = DateTime.now();
-  // ignore: unused_field
   DateTime? _selectedDate;
   DateTime? _selectedAppointmentDate;
   TimeOfDay? _selectedTime;
   DateTime? _selectedTrainerAppointmentDate;
   TimeOfDay? _selectedTrainerTime;
   int selectedWeekday = DateTime.now().weekday;
-  String? _userTier; // Add this line to store the user's tier.
+  String? _userTier;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Map<String, dynamic>> workoutData = [];
@@ -44,12 +42,12 @@ class _HomePageState extends State<HomePage> {
       print('Error: User ID is empty!');
       return; // Stop further execution if userId is invalid
     }
-    _fetchUserName(); // Fetch the user's name from Firestore
-    _fetchWorkoutCards(); // Fetch workout cards for the user
-    _fetchAppointment(); // Fetch the appointment
-    _fetchTrainerAppointment();
-    _fetchUserTier(); // Fetch the user tier
-    _loadProfileImage();
+    _fetchUserName(); // Busca o nome do utilizador
+    _fetchWorkoutCards(); // Busca os treinos do utilizador
+    _fetchAppointment(); // Busca o agendamento
+    _fetchTrainerAppointment(); // Busca o agendamento do treinador
+    _fetchUserTier(); // Busca o plano do utilizador
+    _loadProfileImage(); // Carrega a imagem de perfil
   }
 
   // Função para buscar a imagem de perfil do Firestore
@@ -62,14 +60,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // Função para buscar o plano do utilizador
   Future<void> _fetchUserTier() async {
     try {
       final userDoc =
           await _firestore.collection('users').doc(widget.userId).get();
       if (userDoc.exists) {
         setState(() {
-          _userTier = userDoc[
-              'subscription_plan']; // Assuming tier is stored as a field 'tier'
+          _userTier = userDoc['subscription_plan'];
         });
       }
     } catch (e) {
@@ -77,13 +75,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // Função para buscar o nome do utilizador
   Future<void> _fetchUserName() async {
     try {
       final userDoc =
           await _firestore.collection('users').doc(widget.userId).get();
       if (userDoc.exists) {
         setState(() {
-          _userName = userDoc['username']; // Assuming the field is 'username'
+          _userName = userDoc['username'];
         });
       }
     } catch (e) {
@@ -91,6 +90,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // Função para buscar os cartões de treino
   Future<void> _fetchWorkoutCards() async {
     try {
       final QuerySnapshot querySnapshot = await _firestore
@@ -115,6 +115,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // Função para adicionar um novo cartão de treino
   Future<void> _addWorkoutCard(
       String title, String subtitle, int weekday) async {
     try {
@@ -127,20 +128,20 @@ class _HomePageState extends State<HomePage> {
         'subtitle': subtitle,
         'weekday': weekday,
       });
-      _fetchWorkoutCards();
+      _fetchWorkoutCards(); // Atualiza os cartões de treino após a adição
     } catch (e) {
       print('Error adding workout card: $e');
     }
   }
 
+  // Função para salvar o agendamento do nutricionista
   Future<void> _saveAppointment(DateTime date, TimeOfDay time) async {
     try {
       await _firestore
           .collection('users')
           .doc(widget.userId)
-          .collection('appointments') // Subcoleção de appointments
-          .doc(
-              'nutritionist') // Aqui pode ser um identificador único ou um nome fixo
+          .collection('appointments') // Subcoleção de agendamentos
+          .doc('nutritionist') // Identificador fixo ou único
           .set(
               {
             'date': date.toIso8601String(),
@@ -154,13 +155,14 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // Função para buscar o agendamento do nutricionista
   Future<void> _fetchAppointment() async {
     try {
       final appointmentDoc = await _firestore
           .collection('users')
           .doc(widget.userId)
-          .collection('appointments') // Subcoleção de appointments
-          .doc('nutritionist') // O identificador fixo, ou pode ser dinâmico
+          .collection('appointments') // Subcoleção de agendamentos
+          .doc('nutritionist') // Identificador fixo ou único
           .get();
 
       if (appointmentDoc.exists) {
@@ -178,6 +180,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // Função para salvar o agendamento com o treinador
   Future<void> _saveTrainerAppointment(DateTime date, TimeOfDay time) async {
     try {
       await _firestore
@@ -195,6 +198,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // Função para buscar o agendamento com o treinador
   Future<void> _fetchTrainerAppointment() async {
     try {
       final trainerAppointmentDoc = await _firestore
@@ -241,11 +245,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ).then((_) {
-                    _fetchUserName(); // Refresh user name
-                    _fetchWorkoutCards(); // Refresh workout cards
-                    _fetchAppointment(); // Refresh appointments
-                    _fetchTrainerAppointment(); // Refresh trainer appointments
-                    _fetchUserTier(); // Refresh user tier
+                    _fetchUserName(); // Atualiza nome do utilizador
+                    _fetchWorkoutCards(); // Atualiza cartões de treino
+                    _fetchAppointment(); // Atualiza agendamentos
+                    _fetchTrainerAppointment(); // Atualiza agendamento do treinador
+                    _fetchUserTier(); // Atualiza plano do utilizador
                   });
                 },
                 child: CircleAvatar(
@@ -270,7 +274,8 @@ class _HomePageState extends State<HomePage> {
                     TextSpan(
                       text: _userName!,
                       style: TextStyle(
-                          color: theme.primaryColor), // Username in black
+                          color: theme
+                              .primaryColor), // Nome do utilizador em preto
                     ),
                 ],
               ),
@@ -360,7 +365,7 @@ class _HomePageState extends State<HomePage> {
               _buildTrainerCard(),
               const SizedBox(height: 20),
               _buildSectionTitle("Your Nutritionist"),
-              _buildNutritionistCard(), // Exibe o card do nutricionista
+              _buildNutritionistCard(),
               const SizedBox(height: 10),
             ],
           ),
@@ -407,6 +412,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // Função para exibir o diálogo de adicionar treino
   void _showAddWorkoutDialog() {
     final theme = Theme.of(context);
     final TextEditingController titleController = TextEditingController();
@@ -417,7 +423,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
-          // Isso permite atualizar o estado do Dialog
+          // Permite atualizar o estado do diálogo
           builder: (context, setDialogState) {
             return AlertDialog(
               title: const Text("Add New Workout"),

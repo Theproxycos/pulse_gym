@@ -36,7 +36,7 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
         height = (userDoc['height'] as num?)?.toDouble();
       });
     }
-    // Now fetch weight logs only after user data is fetched
+    // Agora, buscar os registos de peso apenas depois de os dados do utilizador serem carregados
     _fetchWeightLogs();
   }
 
@@ -51,24 +51,24 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
     setState(() {
       weightData = [];
       weightDates = [];
-      Map<double, String> xToDate = {}; // Store x-position -> Date mapping
+      Map<double, String> xToDate = {}; // Armazenar mapeamento de x -> Data
       double xValue =
-          0.0; // Start from 0 and increment to ensure unique positions
+          0.0; // Começar do 0 e incrementar para garantir posições únicas
 
       for (var doc in logs.docs) {
         double weightValue = (doc['weight'] as num).toDouble();
         DateTime date = (doc['date'] as Timestamp).toDate();
         String formattedDate = DateFormat("dd MMM").format(date);
 
-        // Store the date for each x-value
+        // Armazenar a data para cada valor de x
         xToDate[xValue] = formattedDate;
 
         weightData.add(FlSpot(xValue, weightValue));
-        xValue += 1.0; // Increment x value for the next data point
+        xValue += 1.0; // Incrementar valor de x para o próximo ponto de dados
       }
 
-      weightDates =
-          xToDate.values.toList(); // Ensure labels align with X values
+      weightDates = xToDate.values
+          .toList(); // Garantir que os rótulos alinhem com os valores de X
     });
   }
 
@@ -83,16 +83,16 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
   Widget build(BuildContext context) {
     double? bmi = _calculateBMI();
 
-    // Determine the minimum and maximum Y values based on the data
+    // Determinar os valores mínimos e máximos do eixo Y com base nos dados
     double minY, maxY;
     if (weightData.isNotEmpty) {
       if (weightData.length == 1) {
-        // Single data point: center it in the graph
+        // Um único ponto de dados: centralizar no gráfico
         double weightValue = weightData.first.y;
-        minY = weightValue - 10; // 10kg gap below
-        maxY = weightValue + 10; // 10kg gap above
+        minY = weightValue - 10; // Espaço de 10kg abaixo
+        maxY = weightValue + 10; // Espaço de 10kg acima
       } else {
-        // Multiple data points: calculate based on the data
+        // Múltiplos pontos de dados: calcular com base nos dados
         double minWeight =
             weightData.map((spot) => spot.y).reduce((a, b) => a < b ? a : b);
         double maxWeight =
@@ -136,7 +136,7 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                                 showTitles: true,
                                 reservedSize: 40,
                                 getTitlesWidget: (value, meta) {
-                                  // Display titles only for multiples of 5
+                                  // Exibir títulos apenas para múltiplos de 5
                                   if (value % 5 == 0) {
                                     return Text(
                                       value.toStringAsFixed(0),
@@ -145,7 +145,7 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                                     );
                                   }
                                   return const SizedBox
-                                      .shrink(); // Hide titles for other values
+                                      .shrink(); // Esconder títulos para outros valores
                                 },
                               ),
                             ),
@@ -154,21 +154,22 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                                 showTitles: true,
                                 reservedSize: 22,
                                 getTitlesWidget: (value, meta) {
-                                  // Display correct date for each x value
+                                  // Exibir a data correta para cada valor de x
                                   int index = value.toInt();
                                   if (index >= 0 &&
                                       index < weightDates.length) {
                                     return Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
                                       child: Text(
-                                        weightDates[index], // Map index to date
+                                        weightDates[
+                                            index], // Mapear índice para data
                                         style: TextStyle(
                                             color: Colors.grey, fontSize: 12),
                                       ),
                                     );
                                   }
                                   return const SizedBox
-                                      .shrink(); // Hide for invalid x values
+                                      .shrink(); // Esconder para valores de x inválidos
                                 },
                               ),
                             ),
@@ -181,7 +182,7 @@ class _BodyMeasurementsPageState extends State<BodyMeasurementsPage> {
                             show: true,
                             drawVerticalLine: false,
                             horizontalInterval:
-                                5, // Interval of 5 on the horizontal grid
+                                5, // Intervalo de 5 na linha horizontal
                             getDrawingHorizontalLine: (value) => FlLine(
                               color: Colors.grey.shade800,
                               strokeWidth: 0.5,

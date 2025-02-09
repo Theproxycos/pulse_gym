@@ -26,16 +26,18 @@ class _EditProfileState extends State<EditProfile> {
     final args =
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     if (args != null && args.containsKey('userId')) {
-      userId = args['userId'];
+      userId = args['userId']; // Atribuindo o valor do userId
       print("UserId recebido: $userId");
       _loadUserData(); // Carregar os dados do usuário após pegar o userId
     }
   }
 
   void _loadUserData() async {
+    // Função que carrega os dados do usuário
     final userData = await _firestoreService.getUserData(userId);
     if (userData != null) {
       setState(() {
+        // Atualiza os controladores com os dados do usuário
         _usernameController.text = userData['username'] ?? '';
         _emailController.text = userData['email'] ?? '';
         _phoneController.text = userData['phone_number'] ?? '';
@@ -45,6 +47,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   void _saveChanges() async {
+    // Função que salva as alterações feitas no perfil do usuário
     await _firestoreService.updateUserData(userId, {
       'username': _usernameController.text,
       'email': _emailController.text,
@@ -59,7 +62,8 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    print("UserId na build: $userId");
+    print(
+        "UserId na build: $userId"); // Exibe o userId durante a construção do widget
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -71,6 +75,7 @@ class _EditProfileState extends State<EditProfile> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: theme.primaryColor),
           onPressed: () {
+            // Função para voltar à tela anterior ou à homepage
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
             } else {
@@ -88,22 +93,26 @@ class _EditProfileState extends State<EditProfile> {
               Text('Edit Profile',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               SizedBox(height: 20),
+              // Campo para o nome de usuário
               TextField(
                   controller: _usernameController,
                   decoration: InputDecoration(
                       labelText: 'Username', border: OutlineInputBorder())),
               SizedBox(height: 20),
+              // Campo para o email
               TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
                       labelText: 'Email', border: OutlineInputBorder())),
               SizedBox(height: 20),
+              // Campo para o número de telefone
               TextField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                       labelText: 'Phone Number', border: OutlineInputBorder())),
               SizedBox(height: 20),
+              // Campo para o endereço
               TextField(
                   controller: _addressController,
                   decoration: InputDecoration(
@@ -111,7 +120,7 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(height: 30),
               Center(
                 child: OutlinedButton(
-                  onPressed: _saveChanges,
+                  onPressed: _saveChanges, // Salva as alterações
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     side: BorderSide(color: Colors.orange, width: 2),
