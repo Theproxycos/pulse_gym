@@ -81,7 +81,7 @@ class _WorkoutDetailPageState extends State<WorkoutDetailPage> {
       );
 
       // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Workout atualizado com sucesso!')),
+      //   const SnackBar(content: Text('Workout updated successfully!')),
       // );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
